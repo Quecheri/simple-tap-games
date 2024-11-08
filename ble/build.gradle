@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace 'no.nordicsemi.android.ble'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 19
+        targetSdk 34
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'ble-proguard-rules.pro'
+        }
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    api 'androidx.annotation:annotation:1.8.2'
+    //noinspection GradleDependency
+    implementation 'androidx.core:core:1.12.0' // Don't upgrade to 1.13.0, as it increases the minSdk to 19.
+
+    testImplementation 'junit:junit:4.13.2'
+}
+
