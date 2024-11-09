@@ -121,7 +121,7 @@ fun ServerScreen(
                         true -> ResultView(result = serverViewState.result)
                         else -> {
                             Text(
-                                text = "Haystack: " + serverViewState.haystack,
+                                text = serverViewModel.getGameStateString(),
                                 modifier = Modifier.padding(16.dp)
                             )
                             Text(
