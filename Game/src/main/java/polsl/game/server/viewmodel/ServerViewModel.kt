@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import polsl.game.server.repository.Question
 import polsl.game.server.repository.QuestionRepository
-import polsl.game.server.repository.Questions
 import polsl.game.server.repository.AdvertisingManager
 import polsl.game.server.data.*
 import polsl.game.server.repository.ServerConnection
@@ -52,15 +51,25 @@ class ServerViewModel @Inject constructor(
             rollingPointer = -1
         }
     }
-    fun startGame(category: Int? = null) {
+    fun startGame(gameType: GameType) {
         stopAdvertising()
 
-        viewModelScope.launch {
-            _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
-            question = questionRepository.getQuestion()
-            /** Send first Question */
-            showQuestion(question)
-
+        when (gameType) {
+            GameType.NIM -> {
+                viewModelScope.launch {
+                    Log.d("StartGame", "Starting NIM game")
+                    _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
+                    question = questionRepository.getQuestion()
+                    /** Send first Question */
+                    showQuestion(question)
+                }
+            }
+            GameType.FAST_REACTION -> {
+                Log.d("StartGame", "NSY")
+            }
+            GameType.NSY_GAME -> {
+                Log.d("StartGame", "NSY")
+            }
         }
     }
 
@@ -323,5 +332,18 @@ class ServerViewModel @Inject constructor(
 
     private fun mapName(deviceAddress: String): String? {
         return mapNameWithDevice.value.find { it.deviceAddress == deviceAddress }?.name
+    }
+}
+enum class GameType(val value: Int) {
+    NIM(0),
+    FAST_REACTION(1),
+    NSY_GAME(2);
+
+    override fun toString(): String {
+        return when (this) {
+            NIM -> "NIM"
+            FAST_REACTION -> "Fast reaction"
+            NSY_GAME -> "NSY game"
+        }
     }
 }

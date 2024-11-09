@@ -86,7 +86,7 @@ fun ServerScreen(
                             StartGameView(
                                 isAllNameCollected = serverViewState.isAllNameCollected,
                                 joinedPlayer = serverViewState.userJoined,
-                                onStartGame = { serverViewModel.startGame() }
+                                onStartGame = { game -> serverViewModel.startGame(game) }
                             )
                         }
                     }
