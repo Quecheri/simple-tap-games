@@ -22,6 +22,9 @@ import polsl.game.server.repository.ServerManager
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.observer.ServerObserver
+import polsl.game.server.repository.FastReactionStrategy
+import polsl.game.server.repository.GameStrategy
+import polsl.game.server.repository.NimStrategy
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,10 +44,40 @@ class ServerViewModel @Inject constructor(
     private var rollingPointer = -1
     private val mapNameWithDevice: MutableStateFlow<List<Name>> = MutableStateFlow(emptyList())
 
+    private var strategy: GameStrategy?=null
+    private var gameType: GameType?=null
+
+    internal fun getGameType():GameType
+    {
+        return if (gameType!=null) gameType!! else GameType.NSY_GAME
+    }
+
+    internal fun getResultString():String
+    {
+        var result = ""
+        when (gameType!!) {
+            GameType.NIM -> {
+                result = "Player <TU bedzie gracz> lost NIM"
+            }
+            GameType.FAST_REACTION -> {
+                result = "Tu będzie coś o reakcjach"
+            }
+            GameType.NSY_GAME -> {
+                assert(false)
+            }
+        }
+
+        return result
+    }
+    fun getGameStateString():String
+    {
+        return if(strategy!=null) strategy!!.getGameStateString() else ""
+    }
+
     init {
         startServer()
     }
-    fun rollPointer()
+    private fun rollPointer() // TODO move rollPointer to strategy - it should be randomized for second game
     {
         rollingPointer++
         if(rollingPointer==clients.value.size) {
@@ -53,29 +86,38 @@ class ServerViewModel @Inject constructor(
     }
     fun startGame(gameType: GameType) {
         stopAdvertising()
-
+        this.gameType = gameType
         when (gameType) {
             GameType.NIM -> {
-                viewModelScope.launch {
-                    Log.d("StartGame", "Starting NIM game")
-                    _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
-                    question = questionRepository.getQuestion()
-                    /** Send first Question */
-                    showQuestion(question)
-                }
+                Log.d("StartGame", "Starting NIM game")
+                strategy = NimStrategy(questionRepository)
             }
             GameType.FAST_REACTION -> {
-                Log.d("StartGame", "NSY")
+                Log.d("StartGame", "Starting Fast Reaction game")
+                strategy = FastReactionStrategy(questionRepository)
             }
             GameType.NSY_GAME -> {
                 Log.d("StartGame", "NSY")
             }
         }
+        if(strategy!=null)
+        {
+            viewModelScope.launch {
+                _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
+                question = strategy!!.getQuestion()
+                /** Send first Question */
+                showQuestion(question)
+            }
+        }
+        else
+        {
+            assert(false, { "Not supported game" })
+        }
     }
 
     fun showNextQuestion() {
         viewModelScope.launch {
-           if (serverViewState.value.haystack>0)
+           if (!strategy!!.isGameOver())
            {
                showQuestion(question)
            }else
@@ -89,7 +131,7 @@ class ServerViewModel @Inject constructor(
                    )
                }
            }
-
+            question = strategy!!.getQuestion()
         }
     }
 
@@ -311,12 +353,11 @@ class ServerViewModel @Inject constructor(
      */
     private fun saveScore(result: Int , deviceAddress: String) {
         viewModelScope.launch {
-        _serverState.value = _serverState.value.copy(
-            haystack = _serverState.value.haystack - result)
+            strategy!!.updateScore(result)
         _serverState.value.result.find { it.name == mapName(deviceAddress) }
             ?.let { it.score += result }
             clients.value.onEach { client ->
-                client.sendHaystack(serverViewState.value.haystack)
+                client.sendHaystack(strategy!!.getScore())
             }
         }
     }

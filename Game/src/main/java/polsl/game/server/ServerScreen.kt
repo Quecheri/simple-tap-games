@@ -92,7 +92,7 @@ fun ServerScreen(
                     }
                 is Round -> {
                     Text(
-                        text = "Haystack: " + serverViewState.haystack,
+                        text = serverViewModel.getGameStateString(),
                         modifier = Modifier.padding(16.dp)
                     )
                     when (serverViewState.isGameOver) {

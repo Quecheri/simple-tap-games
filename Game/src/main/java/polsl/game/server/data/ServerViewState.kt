@@ -20,7 +20,6 @@ data class ServerViewState(
     val selectedAnswerId: Int? = null,
     val ticks: Long? = null,
     val isYourTurn: Boolean = false,
-    var haystack: Int = 50,
     val userJoined: List<Player> = emptyList(),
     val isGameOver: Boolean? = null,
     val result: List<Result> = emptyList(),
