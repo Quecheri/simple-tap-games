@@ -28,22 +28,28 @@ fun ImageQuestionContentView(
     onAnswerSelected: (Int) -> Unit,
     onTimeOut: (Int) -> Unit,
 ) {
+    TimerView(
+        key = shouldReact,
+        duration = ticks,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        onTimeOut = { onTimeOut(1) },
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onAnswerSelected(2) }
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = modifier
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.Center
         ) {
             Image(
                 painter = painterResource(id = if (shouldReact) R.drawable.beaver else R.drawable.capybara),
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = modifier
                     .padding(16.dp)
             )
         }

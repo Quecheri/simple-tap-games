@@ -23,6 +23,8 @@ import polsl.game.server.view.WaitingForClientsView
 import polsl.game.server.viewmodel.ServerViewModel
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.ui.view.NordicAppBar
+import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,18 +101,37 @@ fun ServerScreen(
 
                                 val ticks by serverViewModel.ticks.collectAsState()
                                 val isTimerRunning = ticks > 0
-
-                                StringQuestionContentView(
-                                    question = currentState.question.question,
-                                    answers = serverViewState.toViewState(),
-                                    ticks = ticks,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    onAnswerSelected = { answerChosen ->
-                                        serverViewModel.selectedAnswerServer(answerChosen)
-                                        serverViewModel.stopCountDown()
-                                    },
-                                    onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)}
-                                )
+                                when(serverViewModel.getGameType())
+                                {
+                                    GameType.NIM ->
+                                    {
+                                        StringQuestionContentView(
+                                            question = currentState.question.question,
+                                            answers = serverViewState.toViewState(),
+                                            ticks = ticks,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            onAnswerSelected = { answerChosen ->
+                                                serverViewModel.selectedAnswerServer(answerChosen)
+                                                serverViewModel.stopCountDown()
+                                            },
+                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)}
+                                        )
+                                    }
+                                    GameType.FAST_REACTION ->
+                                    {
+                                        ImageQuestionContentView(
+                                            shouldReact = currentState.question.question=="You should click",//TODO optimize it
+                                            ticks = ticks,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            onAnswerSelected = { answerChosen ->
+                                                serverViewModel.selectedAnswerServer(answerChosen)
+                                                serverViewModel.stopCountDown()
+                                            },
+                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)}
+                                        )
+                                    }
+                                    GameType.NSY_GAME -> TODO()
+                                }
                         }
                     }
                 }
