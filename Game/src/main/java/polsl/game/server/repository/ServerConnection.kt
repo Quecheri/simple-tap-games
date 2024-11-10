@@ -159,6 +159,18 @@ class ServerConnection(
     }
 
     /**
+     * Send final result and scores to all clients. The data is split into MTU size
+     * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
+     */
+    suspend fun sendResultStr(results: String) {
+        val request = RequestProto(OpCodeProto.RESULT_STR, resultStr=results)
+        val requestByteArray = request.encode()
+        sendNotification(serverCharacteristic, requestByteArray)
+            .split(PacketSplitter())
+            .suspend()
+    }
+
+    /**
      * Sends whether or not name provided by the client is empty. The data is split into MTU size
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */

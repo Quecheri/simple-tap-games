@@ -35,7 +35,8 @@ data class ClientViewState(
     val error: String? = null,
     val isUserTyping: Boolean = false,
     val userRequestedPlayersNameDialog: Boolean = true,
-    val haystack: Int = 50,
+    val haystack: Int? = null,
+    val resultStr: String? = null,
 ) {
     val isTimerRunning: Boolean = ticks?.let { it > 0 } == true
 

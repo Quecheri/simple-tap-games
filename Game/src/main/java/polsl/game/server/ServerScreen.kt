@@ -96,7 +96,7 @@ fun ServerScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                     when (serverViewState.isGameOver) {
-                        true -> ResultView(result = serverViewState.result)
+                        true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
 
                                 val ticks by serverViewModel.ticks.collectAsState()
@@ -118,7 +118,7 @@ fun ServerScreen(
                 }
                 else -> {
                     when (serverViewState.isGameOver) {
-                        true -> ResultView(result = serverViewState.result)
+                        true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
                             Text(
                                 text = serverViewModel.getGameStateString(),

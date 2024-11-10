@@ -12,6 +12,7 @@ enum OpCodeProto {
   ERROR        = 6;
   YOUR_TURN    = 7;
   HAYSTACK     = 8;
+  RESULT_STR   = 9;
 }
 
 message RequestProto {
@@ -27,6 +28,7 @@ message RequestProto {
   bool isDuplicateName    = 10;
   bool isYourTurn         = 11;
   int32 haystackValue     = 12;
+  string resultStr        = 13;
 }
 
 message QuestionProto {

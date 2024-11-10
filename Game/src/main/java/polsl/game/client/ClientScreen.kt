@@ -58,11 +58,9 @@ fun ClientScreen(
                         is ConnectionState.Disconnected -> DisconnectedView(state.reason)
                         ConnectionState.Ready -> {
                             when (clientViewState.isGameOver) {
-                                true -> clientViewState.result?.result?.let { result ->
-                                    ResultView(
-                                        result = result
-                                    )
-                                }
+                                true -> ResultView(
+                                    result = (clientViewState.resultStr ?: "Error while receving result")
+                                )
                                 else -> {
 
                                         clientViewState.question?.let {

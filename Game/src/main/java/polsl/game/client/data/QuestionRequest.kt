@@ -24,6 +24,7 @@ class Request : ReadResponse() {
     var result: Results? = null
     var nameResult: NameResult? = null
     var haystack: Int? = null
+    var resultStr: String? = null
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
         val bytes = data.value!!
@@ -39,6 +40,7 @@ class Request : ReadResponse() {
                 isEmptyName = request.isEmptyName,
                 isDuplicateName = request.isDuplicateName,
             ) }
+            OpCodeProto.RESULT_STR -> { resultStr = request.resultStr }
             else -> {}
         }
     }

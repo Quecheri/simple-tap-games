@@ -47,6 +47,8 @@ class ClientConnection(
     val result = _result.asSharedFlow()
     private val _nameResult = MutableSharedFlow<NameResult>()
     val error = _nameResult.asSharedFlow()
+    private val _resultStr = MutableSharedFlow<String>()
+    val resultStr = _resultStr.asSharedFlow()
 
     override fun log(priority: Int, message: String) {
         Log.println(priority, TAG, message)
@@ -83,6 +85,7 @@ class ClientConnection(
                     it.isGameOver?.let { isGameOver -> _isGameOver.emit(isGameOver) }
                     it.result?.let { results -> _result.emit(results) }
                     it.haystack?.let { haystack -> _haystack.emit(haystack) }
+                    it.resultStr?.let { resultStr -> _resultStr.emit(resultStr) }
                 }
                 .launchIn(scope)
             enableNotifications(characteristic).enqueue()

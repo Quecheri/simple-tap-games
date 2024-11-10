@@ -57,7 +57,9 @@ class ServerViewModel @Inject constructor(
         var result = ""
         when (gameType!!) {
             GameType.NIM -> {
-                result = "Player <TU bedzie gracz> lost NIM"
+                val loser = if(rollingPointer==-1) _serverState.value.result.last() else _serverState.value.result[rollingPointer]
+                val loserName = loser.name
+                result = "Player $loserName lost NIM"
             }
             GameType.FAST_REACTION -> {
                 result = "Tu będzie coś o reakcjach"
@@ -84,6 +86,7 @@ class ServerViewModel @Inject constructor(
             rollingPointer = -1
         }
     }
+
     fun startGame(gameType: GameType) {
         stopAdvertising()
         this.gameType = gameType
@@ -119,19 +122,20 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
+               rollPointer()
+               question = strategy!!.getQuestion()
                showQuestion(question)
            }else
            {
                _serverState.value = _serverState.value.copy(isGameOver = true)
-               /** Send game over flag and results to all players.*/
+               /** Send game over flag and results string to all players.*/
                clients.value.forEach {
                    it.gameOver(true)
-                   it.sendResult(
-                       Results(_serverState.value.result)
+                   it.sendResultStr(
+                       getResultString()
                    )
                }
            }
-            question = strategy!!.getQuestion()
         }
     }
 
@@ -150,8 +154,6 @@ class ServerViewModel @Inject constructor(
                 _serverState.value = _serverState.value.copy(state = WaitingForRound)
                 clients.value[rollingPointer].sendQuestion(question)
             }
-
-            rollPointer();
         }
     }
 

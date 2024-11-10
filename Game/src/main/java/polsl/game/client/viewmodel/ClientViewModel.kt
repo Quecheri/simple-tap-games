@@ -79,6 +79,9 @@ class ClientViewModel @Inject constructor(
                     haystack
                         .onEach { _clientState.value = _clientState.value.copy(haystack = it) }
                         .launchIn(viewModelScope)
+                    resultStr
+                        .onEach { _clientState.value = _clientState.value.copy(resultStr = it) }
+                        .launchIn(viewModelScope)
                 }
                 .apply { connect() }
                 .apply { clientManager = this }

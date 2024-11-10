@@ -18,7 +18,7 @@ class NimStrategy(questionRepository: QuestionRepository) : GameStrategy(questio
     private var haystack: Int = 20
     override fun getQuestion(): Question
     {
-        return questionRepository.getNimQuestion()
+        return questionRepository.getNimQuestion(haystack)
     }
 
     override fun getGameStateString(): String {
@@ -67,9 +67,9 @@ class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrateg
 @Singleton
 class QuestionRepository @Inject constructor(
 ) {
-    fun getNimQuestion(): Question {
+    fun getNimQuestion(haystack : Int): Question {
         val answers: List<Answer> = listOf(Answer("1",1),Answer("2",2),Answer("3",3))
-        return Question("How many sticks?",answers,null)
+        return Question("How many sticks?",answers.take(haystack),null)
     }
     fun getFastReactionQuestion(): Question {
         val answers: List<Answer> = listOf(Answer("Im not clicking",1),Answer("Im clicking",2))

@@ -18,8 +18,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ResultView(result: List<Result?>) {
-    val sortedResult: List<Result?> = result.sortedByDescending { it?.score }
+fun ResultView(result: String) {
     var openDialog by remember { mutableStateOf(true) }
     if (openDialog) {
         ResultDialog(
@@ -37,25 +36,12 @@ fun ResultView(result: List<Result?>) {
                             modifier = Modifier.padding(16.dp),
                         ) {
                             Text(
-                                text = stringResource(id = R.string.players),
+                                text = "Gra x",
                                 modifier = Modifier.weight(1f)
                             )
-                            Text(text = stringResource(id = R.string.score))
+                            Text(text = result)
                         }
                     }
-                }
-                items(sortedResult) { sortedResult ->
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.padding(16.dp),
-                    ) {
-                        Text(
-                            text = sortedResult?.name ?: "",
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(text = sortedResult?.score.toString())
-                    }
-                    Divider()
                 }
             }
     }
@@ -92,11 +78,7 @@ fun ResultDialog(
 fun ResultView_Preview() {
     NordicTheme {
         ResultView(
-            result = listOf(
-                Result("User 1", 1),
-                Result("User 2", 5),
-                Result("User 3", 4)
-            )
+            result = "Player Andrzej lost NIM game !"
         )
     }
 }
