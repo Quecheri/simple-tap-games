@@ -22,7 +22,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
  * Shows questions and list of answers.
  */
 @Composable
-fun QuestionContentView(
+fun StringQuestionContentView(
     question: String?,
     answers: List<DisplayAnswer>,
     ticks: Long,
@@ -76,9 +76,9 @@ fun QuestionContentView(
 
 @Preview
 @Composable
-private fun QuestionContentView_Preview() {
+private fun StringQuestionContentView_Preview() {
     NordicTheme {
-        QuestionContentView(
+        StringQuestionContentView(
             question =
             "How are you?",
             ticks = 4000,

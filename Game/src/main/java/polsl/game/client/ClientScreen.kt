@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import polsl.game.R
 import polsl.game.client.viewmodel.ClientViewModel
 import polsl.game.server.view.PlayersNameDialog
-import polsl.game.server.view.QuestionContentView
+import polsl.game.server.view.StringQuestionContentView
 import polsl.game.client.data.toViewState
 import polsl.game.client.view.*
 import polsl.game.server.view.ResultView
@@ -70,7 +70,7 @@ fun ClientScreen(
                                                     text = "Haystack: " + clientViewState.haystack,
                                                     modifier = Modifier.padding(16.dp)
                                                 )
-                                                QuestionContentView(
+                                                StringQuestionContentView(
                                                 question = clientViewState.question?.question,
                                                 answers = clientViewState.toViewState(),
                                                 ticks = ticks,

@@ -12,13 +12,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import polsl.game.R
-import polsl.game.server.data.DownloadingQuestions
 import polsl.game.server.data.Round
 import polsl.game.server.data.WaitingForPlayers
-import polsl.game.server.data.WaitingForRound
 import polsl.game.server.data.toViewState
 import polsl.game.server.view.PlayersNameDialog
-import polsl.game.server.view.QuestionContentView
+import polsl.game.server.view.StringQuestionContentView
 import polsl.game.server.view.ResultView
 import polsl.game.server.view.StartGameView
 import polsl.game.server.view.WaitingForClientsView
@@ -102,7 +100,7 @@ fun ServerScreen(
                                 val ticks by serverViewModel.ticks.collectAsState()
                                 val isTimerRunning = ticks > 0
 
-                                QuestionContentView(
+                                StringQuestionContentView(
                                     question = currentState.question.question,
                                     answers = serverViewState.toViewState(),
                                     ticks = ticks,
