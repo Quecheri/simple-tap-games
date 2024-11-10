@@ -22,9 +22,9 @@ import polsl.game.server.repository.ServerManager
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.observer.ServerObserver
-import polsl.game.server.repository.FastReactionStrategy
-import polsl.game.server.repository.GameStrategy
-import polsl.game.server.repository.NimStrategy
+import polsl.game.server.model.FastReactionStrategy
+import polsl.game.server.model.GameStrategy
+import polsl.game.server.model.NimStrategy
 import javax.inject.Inject
 
 @HiltViewModel
