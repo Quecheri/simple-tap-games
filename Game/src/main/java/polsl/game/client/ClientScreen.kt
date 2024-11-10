@@ -22,6 +22,8 @@ import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.permissions.ble.RequireLocation
 import no.nordicsemi.android.common.ui.view.NordicAppBar
+import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,17 +72,37 @@ fun ClientScreen(
                                                     text = "Haystack: " + clientViewState.haystack,
                                                     modifier = Modifier.padding(16.dp)
                                                 )
-                                                StringQuestionContentView(
-                                                question = clientViewState.question?.question,
-                                                answers = clientViewState.toViewState(),
-                                                ticks = ticks,
-                                                modifier = Modifier.fillMaxWidth(),
-                                                onAnswerSelected = { answerChosen ->
-                                                    clientViewModel.sendAnswer(answerChosen)
-                                                    clientViewModel.stopCountDown()},
-                                                onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(1)
-                                                },
-                                                )
+
+                                                when(clientViewState.gameParams!!.gameType)
+                                                {
+                                                    GameType.NIM ->
+                                                    {
+                                                        StringQuestionContentView(
+                                                            question = clientViewState.question?.question,
+                                                            answers = clientViewState.toViewState(),
+                                                            ticks = ticks,
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            onAnswerSelected = { answerChosen ->
+                                                                clientViewModel.sendAnswer(answerChosen)
+                                                                clientViewModel.stopCountDown()},
+                                                            onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(1)
+                                                            },
+                                                        )
+                                                    }
+                                                    GameType.FAST_REACTION ->
+                                                    {
+                                                        ImageQuestionContentView(
+                                                            shouldReact = clientViewState.question?.question=="You should click",//TODO maybe do some communication codes
+                                                            ticks = ticks,
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            onAnswerSelected = { answerChosen ->
+                                                                clientViewModel.sendAnswer(answerChosen)
+                                                                clientViewModel.stopCountDown()},
+                                                            onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(1)},
+                                                        )
+                                                    }
+                                                    GameType.NSY_GAME -> TODO()
+                                                }
                                             }
                                             else
                                             {

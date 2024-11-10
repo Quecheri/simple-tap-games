@@ -13,6 +13,7 @@ enum OpCodeProto {
   YOUR_TURN    = 7;
   HAYSTACK     = 8;
   RESULT_STR   = 9;
+  GAME_PARAMS = 10;
 }
 
 message RequestProto {
@@ -29,6 +30,7 @@ message RequestProto {
   bool isYourTurn         = 11;
   int32 haystackValue     = 12;
   string resultStr        = 13;
+  GameParamsProto gameParams = 14;
 }
 
 message QuestionProto {
@@ -56,4 +58,10 @@ message PlayersProto {
 
 message PlayerProto {
   string name = 1;
+}
+
+message GameParamsProto{
+    int32 gameType = 1;
+    int32 timeout = 2;
+    int32 numParam1 = 3;
 }

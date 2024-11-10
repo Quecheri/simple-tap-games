@@ -48,7 +48,7 @@ class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrateg
     }
 
     override fun getGameStateString(): String {
-        return "Num of question left: <inf>"
+        return "Num of question left: $numberOfQuestions"
     }
 
     override fun isGameOver(): Boolean {

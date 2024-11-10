@@ -11,7 +11,9 @@ import polsl.game.server.data.Results
 import polsl.game.server.data.toPlayers
 import polsl.game.server.data.toResults
 import no.nordicsemi.android.ble.response.ReadResponse
+import polsl.game.server.data.GameParams
 import polsl.game.server.data.NameResult
+import polsl.game.server.data.toGameParams
 
 /**
  * This class decodes the received packet using Protobuf.
@@ -25,6 +27,7 @@ class Request : ReadResponse() {
     var nameResult: NameResult? = null
     var haystack: Int? = null
     var resultStr: String? = null
+    var gameParams: GameParams? = null
 
     override fun onDataReceived(device: BluetoothDevice, data: Data) {
         val bytes = data.value!!
@@ -41,6 +44,7 @@ class Request : ReadResponse() {
                 isDuplicateName = request.isDuplicateName,
             ) }
             OpCodeProto.RESULT_STR -> { resultStr = request.resultStr }
+            OpCodeProto.GAME_PARAMS -> { gameParams = request.gameParams?.toGameParams() }
             else -> {}
         }
     }

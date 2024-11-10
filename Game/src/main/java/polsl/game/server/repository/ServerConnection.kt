@@ -24,6 +24,7 @@ import polsl.game.server.data.Results
 import polsl.game.server.data.toProto
 import no.nordicsemi.android.ble.ktx.asResponseFlow
 import no.nordicsemi.android.ble.ktx.suspend
+import polsl.game.server.data.GameParams
 
 class ServerConnection(
     context: Context,
@@ -150,8 +151,8 @@ class ServerConnection(
      * Send final result and scores to all clients. The data is split into MTU size
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */
-    suspend fun sendResult(results: Results) {
-        val request = RequestProto(OpCodeProto.RESULT, results = results.toProto())
+    suspend fun sendResultStr(results: String) {
+        val request = RequestProto(OpCodeProto.RESULT_STR, resultStr=results)
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
             .split(PacketSplitter())
@@ -162,8 +163,8 @@ class ServerConnection(
      * Send final result and scores to all clients. The data is split into MTU size
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */
-    suspend fun sendResultStr(results: String) {
-        val request = RequestProto(OpCodeProto.RESULT_STR, resultStr=results)
+    suspend fun sendGameParams(params: GameParams) {
+        val request = RequestProto(OpCodeProto.GAME_PARAMS, gameParams = params.toProto())
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
             .split(PacketSplitter())

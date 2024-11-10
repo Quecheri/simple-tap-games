@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 object Timer {
-    const val TOTAL_TIME = 5_000L
+    var TOTAL_TIME = 5_000L
 }
 
 open class TimerViewModel(

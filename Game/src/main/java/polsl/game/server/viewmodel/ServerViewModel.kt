@@ -113,6 +113,7 @@ class ServerViewModel @Inject constructor(
             viewModelScope.launch {
                 _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
                 question = strategy!!.getQuestion()
+                sendParams(gameType)
                 /** Send first Question */
                 showQuestion(question)
             }
@@ -120,6 +121,16 @@ class ServerViewModel @Inject constructor(
         else
         {
             assert(false, { "Not supported game" })
+        }
+    }
+
+    private suspend fun sendParams(gameType: GameType) {
+        /** Send game params */
+        val timeout = 2000
+        Timer.TOTAL_TIME = timeout.toLong()
+
+        clients.value.forEach {
+            it.sendGameParams(GameParams(gameType, timeout, 20));//TODO parametrize timeout
         }
     }
 
@@ -390,6 +401,11 @@ enum class GameType(val value: Int) {
     FAST_REACTION(1),
     NSY_GAME(2);
 
+    companion object {
+        fun fromInt(value: Int): GameType? {
+            return entries.find { it.value == value }
+        }
+    }
     override fun toString(): String {
         return when (this) {
             NIM -> "NIM"

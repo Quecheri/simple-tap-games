@@ -6,6 +6,7 @@ import polsl.game.server.data.DisplayAnswer
 import polsl.game.server.data.Players
 import polsl.game.server.data.Results
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
+import polsl.game.server.data.GameParams
 import polsl.game.server.data.NameResult
 
 /**
@@ -19,6 +20,7 @@ import polsl.game.server.data.NameResult
  * @property isGameOver         returns true when game is over.
  * @property result             a list of players and their scores.
  * @property isTimerRunning     returns true when timer is running.
+ * TODO add new params
  */
 
 data class ClientViewState(
@@ -37,6 +39,7 @@ data class ClientViewState(
     val userRequestedPlayersNameDialog: Boolean = true,
     val haystack: Int? = null,
     val resultStr: String? = null,
+    val gameParams: GameParams? = null,
 ) {
     val isTimerRunning: Boolean = ticks?.let { it > 0 } == true
 

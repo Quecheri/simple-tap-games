@@ -24,6 +24,7 @@ import polsl.game.spec.PacketMerger
 import polsl.game.spec.PacketSplitter
 import no.nordicsemi.android.ble.ktx.asResponseFlow
 import no.nordicsemi.android.ble.ktx.suspend
+import polsl.game.server.data.GameParams
 
 class ClientConnection(
     context: Context,
@@ -49,6 +50,8 @@ class ClientConnection(
     val error = _nameResult.asSharedFlow()
     private val _resultStr = MutableSharedFlow<String>()
     val resultStr = _resultStr.asSharedFlow()
+    private val _gameParams = MutableSharedFlow<GameParams>()
+    val gameParams = _gameParams.asSharedFlow()
 
     override fun log(priority: Int, message: String) {
         Log.println(priority, TAG, message)
@@ -86,6 +89,7 @@ class ClientConnection(
                     it.result?.let { results -> _result.emit(results) }
                     it.haystack?.let { haystack -> _haystack.emit(haystack) }
                     it.resultStr?.let { resultStr -> _resultStr.emit(resultStr) }
+                    it.gameParams?.let { gameParams -> _gameParams.emit(gameParams) }
                 }
                 .launchIn(scope)
             enableNotifications(characteristic).enqueue()

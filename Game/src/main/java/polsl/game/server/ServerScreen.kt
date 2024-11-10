@@ -91,10 +91,6 @@ fun ServerScreen(
                         }
                     }
                 is Round -> {
-                    Text(
-                        text = serverViewModel.getGameStateString(),
-                        modifier = Modifier.padding(16.dp)
-                    )
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
@@ -120,7 +116,7 @@ fun ServerScreen(
                                     GameType.FAST_REACTION ->
                                     {
                                         ImageQuestionContentView(
-                                            shouldReact = currentState.question.question=="You should click",//TODO optimize it
+                                            shouldReact = currentState.question.question=="You should click",//TODO maybe do some communication codes
                                             ticks = ticks,
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->

@@ -82,6 +82,12 @@ class ClientViewModel @Inject constructor(
                     resultStr
                         .onEach { _clientState.value = _clientState.value.copy(resultStr = it) }
                         .launchIn(viewModelScope)
+                    gameParams
+                        .onEach {
+                            _clientState.value = _clientState.value.copy(gameParams = it)
+                            Timer.TOTAL_TIME = clientState.value.gameParams?.timeout?.toLong() ?: Timer.TOTAL_TIME
+                        }
+                        .launchIn(viewModelScope)
                 }
                 .apply { connect() }
                 .apply { clientManager = this }
