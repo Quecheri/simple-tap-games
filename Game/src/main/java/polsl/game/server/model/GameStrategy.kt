@@ -40,10 +40,10 @@ class NimStrategy(questionRepository: QuestionRepository) : GameStrategy(questio
 
 class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrategy(questionRepository)
 {
-    private var numberOfQuestions = 20
+    private val initialNumberOfQuestions = 20
+    private var numberOfQuestions = initialNumberOfQuestions
     override fun getQuestion(): Question
     {
-        numberOfQuestions--
         return questionRepository.getFastReactionQuestion()
     }
 
@@ -61,5 +61,10 @@ class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrateg
 
     override fun getScore(): Int {
         return numberOfQuestions
+    }
+
+    fun getInitialNumberOfQuestions():Int
+    {
+        return initialNumberOfQuestions
     }
 }

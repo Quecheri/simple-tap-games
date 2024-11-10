@@ -62,7 +62,12 @@ class ServerViewModel @Inject constructor(
                 result = "Player $loserName lost NIM"
             }
             GameType.FAST_REACTION -> {
-                result = "Tu będzie coś o reakcjach"
+                val sumOfScores = _serverState.value.result.sumOf{it.score}
+                val numOfQuestions = (strategy as FastReactionStrategy).getInitialNumberOfQuestions()
+                val incorrect = (numOfQuestions-sumOfScores)/2
+                val correct = numOfQuestions - incorrect
+
+                result = "Incorrect reactions: $incorrect \nCorrect reactions: $correct"
             }
             GameType.NSY_GAME -> {
                 assert(false)
@@ -356,8 +361,11 @@ class ServerViewModel @Inject constructor(
     private fun saveScore(result: Int , deviceAddress: String) {
         viewModelScope.launch {
             strategy!!.updateScore(result)
+            var resultBoost = result // NIM case
+            if(question.correctAnswerId != null) //Fast reaction game case
+                resultBoost = if(question.correctAnswerId == result) 1 else -1
         _serverState.value.result.find { it.name == mapName(deviceAddress) }
-            ?.let { it.score += result }
+            ?.let { it.score +=  resultBoost }
             clients.value.onEach { client ->
                 client.sendHaystack(strategy!!.getScore())
             }
