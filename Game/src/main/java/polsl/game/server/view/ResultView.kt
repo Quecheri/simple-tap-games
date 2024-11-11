@@ -34,11 +34,8 @@ fun ResultView(result: String) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.padding(16.dp),
-                        ) {
-                            Text(
-                                text = "Gra x",
-                                modifier = Modifier.weight(1f)
-                            )
+                        )
+                        {
                             Text(text = result)
                         }
                     }

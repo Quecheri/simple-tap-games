@@ -69,15 +69,14 @@ fun ClientScreen(
                                         clientViewState.question?.let {
                                             if(clientViewState.isYourTurn)
                                             {
-                                                Text(
-                                                    text = "Haystack: " + clientViewState.haystack,
-                                                    modifier = Modifier.padding(16.dp)
-                                                )
-
                                                 when(clientViewState.gameParams!!.gameType)
                                                 {
                                                     GameType.NIM ->
                                                     {
+                                                        Text(
+                                                            text = "Haystack: " + clientViewState.haystack,
+                                                            modifier = Modifier.padding(16.dp)
+                                                        )
                                                         StringQuestionContentView(
                                                             question = clientViewState.question?.question,
                                                             answers = clientViewState.toViewState(),
@@ -95,6 +94,7 @@ fun ClientScreen(
                                                         ImageQuestionContentView(
                                                             shouldReact = clientViewState.question?.question==SHOULD_CLICK,
                                                             ticks = ticks,
+                                                            progress = clientViewState.getProgress(),
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
                                                                 clientViewModel.sendAnswer(answerChosen)
@@ -108,7 +108,7 @@ fun ClientScreen(
                                             else
                                             {
                                                 Text(
-                                                    text = "Wait for your turn:",
+                                                    text = "Wait for your turn",
                                                     modifier = Modifier.padding(16.dp)
                                                 )
                                             }

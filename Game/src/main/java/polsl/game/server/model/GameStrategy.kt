@@ -11,6 +11,10 @@ abstract class GameStrategy(protected val questionRepository: QuestionRepository
     abstract fun isGameOver(): Boolean
     abstract fun updateScore(result: Int)
     abstract fun getScore() : Int
+    open fun getProgress():Float
+    {
+        return 0F
+    }
 
 }
 
@@ -41,7 +45,8 @@ class NimStrategy(questionRepository: QuestionRepository) : GameStrategy(questio
 
 class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrategy(questionRepository)
 {
-    private var numberOfQuestions = 20
+    private var initialNumberOfQuestions = 20
+    private var numberOfQuestions = initialNumberOfQuestions
     private var shouldClick = false
     private var results = FastReactionResults(0,0,0,0,0)
 
@@ -94,6 +99,12 @@ class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrateg
     override fun getScore(): Int {
         return numberOfQuestions
     }
+
+    override fun getProgress():Float
+    {
+        return 1 - numberOfQuestions.toFloat() / initialNumberOfQuestions
+    }
+
 
     fun getResultSting():String
     {

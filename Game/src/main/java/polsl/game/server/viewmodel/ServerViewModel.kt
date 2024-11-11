@@ -77,6 +77,11 @@ class ServerViewModel @Inject constructor(
         return if(strategy!=null) strategy!!.getGameStateString() else ""
     }
 
+    fun getProgress():Float
+    {
+       return strategy!!.getProgress()
+    }
+
     init {
         startServer()
     }
@@ -126,7 +131,7 @@ class ServerViewModel @Inject constructor(
         Timer.TOTAL_TIME = timeout.toLong()
 
         clients.value.forEach {
-            it.sendGameParams(GameParams(gameType, timeout, 20));//TODO parametrize timeout
+            it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore()));//TODO parametrize timeout
         }
     }
 

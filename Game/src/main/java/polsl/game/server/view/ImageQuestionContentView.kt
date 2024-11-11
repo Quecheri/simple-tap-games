@@ -15,6 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.remember
 import polsl.game.R
 
@@ -25,11 +26,18 @@ import polsl.game.R
 fun ImageQuestionContentView(
     shouldReact: Boolean,
     ticks: Long,
+    progress: Float,
     modifier: Modifier = Modifier,
     onAnswerSelected: (Int) -> Unit,
     onTimeOut: (Int) -> Unit,
 ) {
     val startTime = remember { System.currentTimeMillis() }
+    LinearProgressIndicator(
+        progress = { progress },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+    )
     TimerView(
         key = shouldReact,
         duration = ticks,
@@ -55,8 +63,8 @@ fun ImageQuestionContentView(
             Image(
                 painter = painterResource(id = if (shouldReact) R.drawable.beaver else R.drawable.capybara),
                 contentDescription = null,
-                modifier = modifier
-                    .padding(16.dp)
+                modifier = Modifier
+                    .fillMaxSize()
             )
         }
     }
@@ -69,6 +77,7 @@ private fun ImageQuestionContentView_Preview() {
         ImageQuestionContentView(
             shouldReact =false,
             ticks = 4000,
+            progress = 0.85F,
             modifier = Modifier.fillMaxWidth(),
             onAnswerSelected = {},
             onTimeOut = {},

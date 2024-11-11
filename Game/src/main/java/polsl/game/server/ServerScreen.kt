@@ -102,6 +102,10 @@ fun ServerScreen(
                                 {
                                     GameType.NIM ->
                                     {
+                                        Text(
+                                            text = serverViewModel.getGameStateString(),
+                                            modifier = Modifier.padding(16.dp)
+                                        )
                                         StringQuestionContentView(
                                             question = currentState.question.question,
                                             answers = serverViewState.toViewState(),
@@ -119,6 +123,7 @@ fun ServerScreen(
                                         ImageQuestionContentView(
                                             shouldReact = currentState.question.question==SHOULD_CLICK,
                                             ticks = ticks,
+                                            progress = serverViewModel.getProgress(),
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
@@ -136,12 +141,12 @@ fun ServerScreen(
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
+                            //Text(
+                            //    text = serverViewModel.getGameStateString(),
+                            //    modifier = Modifier.padding(16.dp)
+                            //)
                             Text(
-                                text = serverViewModel.getGameStateString(),
-                                modifier = Modifier.padding(16.dp)
-                            )
-                            Text(
-                                text = "Wait for your turn:",
+                                text = "Wait for your turn",
                                 modifier = Modifier.padding(16.dp)
                             )
 
