@@ -11,12 +11,15 @@ class QuestionRepository @Inject constructor(
         return Question("How many sticks?",answers.take(haystack),null)
     }
     fun getFastReactionQuestion(): Question {
-        val answers: List<Answer> = listOf(Answer("Im not clicking",1),Answer("Im clicking",2))
+        val answers: List<Answer> = listOf(Answer("Im not clicking",1),Answer("Im clicking",2))//TODO maybe answers can be removed
 
         return if(Random.nextBoolean())
-            Question("You should click",answers,2)
+            Question(SHOULD_CLICK,answers,2)
         else
-            Question("You should not click",answers,1)
+            Question(SHOULD_NOT_CLICK,answers,1)
     }
 
 }
+
+internal const val SHOULD_CLICK = "s"
+internal const val SHOULD_NOT_CLICK = "n"

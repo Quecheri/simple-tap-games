@@ -22,6 +22,7 @@ import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.permissions.ble.RequireLocation
 import no.nordicsemi.android.common.ui.view.NordicAppBar
+import polsl.game.server.repository.SHOULD_CLICK
 import polsl.game.server.view.ImageQuestionContentView
 import polsl.game.server.viewmodel.GameType
 
@@ -92,13 +93,13 @@ fun ClientScreen(
                                                     GameType.FAST_REACTION ->
                                                     {
                                                         ImageQuestionContentView(
-                                                            shouldReact = clientViewState.question?.question=="You should click",//TODO maybe do some communication codes
+                                                            shouldReact = clientViewState.question?.question==SHOULD_CLICK,
                                                             ticks = ticks,
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
                                                                 clientViewModel.sendAnswer(answerChosen)
                                                                 clientViewModel.stopCountDown()},
-                                                            onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(1)},
+                                                            onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(-1)},
                                                         )
                                                     }
                                                     GameType.NSY_GAME -> TODO()

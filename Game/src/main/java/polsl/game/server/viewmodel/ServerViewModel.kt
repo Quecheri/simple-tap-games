@@ -57,17 +57,13 @@ class ServerViewModel @Inject constructor(
         var result = ""
         when (gameType!!) {
             GameType.NIM -> {
+                //TODO aktualnie results jest uzywane tylko do przechowywania nicków
                 val loser = if(rollingPointer==-1) _serverState.value.result.last() else _serverState.value.result[rollingPointer]
                 val loserName = loser.name
                 result = "Player $loserName lost NIM"
             }
             GameType.FAST_REACTION -> {
-                val sumOfScores = _serverState.value.result.sumOf{it.score}
-                val numOfQuestions = (strategy as FastReactionStrategy).getInitialNumberOfQuestions()
-                val incorrect = (numOfQuestions-sumOfScores)/2
-                val correct = numOfQuestions - incorrect
-
-                result = "Incorrect reactions: $incorrect \nCorrect reactions: $correct"
+                result = (strategy as FastReactionStrategy).getResultSting()
             }
             GameType.NSY_GAME -> {
                 assert(false)
@@ -155,7 +151,7 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun showQuestion(question: Question) {
+    private fun showQuestion(question: Question) {
         viewModelScope.launch {
             if (rollingPointer == -1) {
                 _serverState.value = _serverState.value.copy(
@@ -372,11 +368,8 @@ class ServerViewModel @Inject constructor(
     private fun saveScore(result: Int , deviceAddress: String) {
         viewModelScope.launch {
             strategy!!.updateScore(result)
-            var resultBoost = result // NIM case
-            if(question.correctAnswerId != null) //Fast reaction game case
-                resultBoost = if(question.correctAnswerId == result) 1 else -1
         _serverState.value.result.find { it.name == mapName(deviceAddress) }
-            ?.let { it.score +=  resultBoost }
+            ?.let { it.score += result }
             clients.value.onEach { client ->
                 client.sendHaystack(strategy!!.getScore())
             }
