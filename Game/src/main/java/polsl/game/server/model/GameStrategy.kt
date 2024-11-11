@@ -4,7 +4,7 @@ import polsl.game.server.repository.Question
 import polsl.game.server.repository.QuestionRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-abstract class GameStrategy(protected val questionRepository: QuestionRepository)
+abstract class GameStrategy(protected val questionRepository: QuestionRepository, protected val uintParam: UInt?)
 {
     abstract fun getQuestion(): Question
     abstract fun getGameStateString(): String
@@ -18,9 +18,11 @@ abstract class GameStrategy(protected val questionRepository: QuestionRepository
 
 }
 
-class NimStrategy(questionRepository: QuestionRepository) : GameStrategy(questionRepository)
+class NimStrategy(questionRepository: QuestionRepository,
+                  uintParam: UInt?
+) : GameStrategy(questionRepository, uintParam)
 {
-    private var haystack: Int = 20
+    private var haystack: Int = uintParam?.toInt() ?: 20
     override fun getQuestion(): Question
     {
         return questionRepository.getNimQuestion(haystack)
@@ -43,9 +45,12 @@ class NimStrategy(questionRepository: QuestionRepository) : GameStrategy(questio
     }
 }
 
-class FastReactionStrategy(questionRepository: QuestionRepository) : GameStrategy(questionRepository)
+class FastReactionStrategy(questionRepository: QuestionRepository,
+                           uintParam: UInt?
+) : GameStrategy(questionRepository, uintParam)
 {
-    private var initialNumberOfQuestions = 20
+
+    private var initialNumberOfQuestions :Int = uintParam?.toInt() ?: 20
     private var numberOfQuestions = initialNumberOfQuestions
     private var shouldClick = false
     private var results = FastReactionResults(0,0,0,0,0)

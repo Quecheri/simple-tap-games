@@ -46,6 +46,8 @@ class ServerViewModel @Inject constructor(
 
     private var strategy: GameStrategy?=null
     private var gameType: GameType?=null
+    private var timeout: UInt?=null
+    private var rounds: UInt?=null
 
     internal fun getGameType():GameType
     {
@@ -93,17 +95,19 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    fun startGame(gameType: GameType) {
+    fun startGame(gameType: GameType, timeout : String, rounds : String) {
+        this.timeout = timeout.toUIntOrNull()
+        this.rounds = rounds.toUIntOrNull()
         stopAdvertising()
         this.gameType = gameType
         when (gameType) {
             GameType.NIM -> {
                 Log.d("StartGame", "Starting NIM game")
-                strategy = NimStrategy(questionRepository)
+                strategy = NimStrategy(questionRepository, this.rounds)
             }
             GameType.FAST_REACTION -> {
                 Log.d("StartGame", "Starting Fast Reaction game")
-                strategy = FastReactionStrategy(questionRepository)
+                strategy = FastReactionStrategy(questionRepository,this.rounds)
             }
             GameType.NSY_GAME -> {
                 Log.d("StartGame", "NSY")
@@ -127,11 +131,11 @@ class ServerViewModel @Inject constructor(
 
     private suspend fun sendParams(gameType: GameType) {
         /** Send game params */
-        val timeout = 2000
+        val timeout = this.timeout?.toInt() ?: 2000
         Timer.TOTAL_TIME = timeout.toLong()
 
         clients.value.forEach {
-            it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore()));//TODO parametrize timeout
+            it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore()));
         }
     }
 
