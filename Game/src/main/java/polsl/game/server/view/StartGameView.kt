@@ -96,7 +96,7 @@ fun StartGameView(
             TextField(
                 value = timeForReaction,
                 onValueChange = { timeForReaction = it },
-                label = { Text("Time for Reaction (milliseconds)") },
+                label = { Text("Time for Reaction (seconds)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )

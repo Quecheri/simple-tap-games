@@ -97,6 +97,8 @@ class ServerViewModel @Inject constructor(
 
     fun startGame(gameType: GameType, timeout : String, rounds : String) {
         this.timeout = timeout.toUIntOrNull()
+        if(this.timeout!=null)
+            this.timeout = this.timeout!!*1000U
         this.rounds = rounds.toUIntOrNull()
         stopAdvertising()
         this.gameType = gameType

@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import polsl.game.R
 
 /**
@@ -32,19 +35,17 @@ fun ImageQuestionContentView(
     onTimeOut: (Int) -> Unit,
 ) {
     val startTime = remember { System.currentTimeMillis() }
+    var shouldStart by remember { mutableStateOf(true) }
     LinearProgressIndicator(
         progress = { progress },
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
     )
-    TimerView(
-        key = shouldReact,
+    TimerEffect(
         duration = ticks,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        onTimeOut = { onTimeOut(-1) },
+        shouldStart = shouldStart,
+        onTimeOut = {onTimeOut(-1)}
     )
     Box(
         modifier = Modifier
@@ -52,6 +53,7 @@ fun ImageQuestionContentView(
             .clickable {
                 val endTime = System.currentTimeMillis()
                 val reactionTime = endTime - startTime
+                shouldStart = false
                 onAnswerSelected(reactionTime.toInt())
             }
     ) {
