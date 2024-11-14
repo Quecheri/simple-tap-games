@@ -81,8 +81,7 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
             }
             else
             {
-                results.incorrectReactions++
-                results.incorrectReactionTime += result
+                results.correctReactions++
             }
         }
         else
@@ -117,10 +116,15 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
         val nonFalseReactions = results.correctReactions
         val allReactions = falseReactions+nonFalseReactions
 
-        val avgFalseTime = (results.incorrectReactionTime / results.incorrectReactions).toDouble()
-        val avgNonFalseTime = (results.correctReactionTime / results.correctReactions).toDouble()
+        val avgFalseTime = if(falseReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
+        val avgNonFalseTime = if(nonFalseReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
 
-        return "Incorrect reactions: $falseReactions (including ${results.skips} skips) with avg time $avgFalseTime ms \nCorrect reactions: $nonFalseReactions with avg time $avgNonFalseTime ms \nFinal score $nonFalseReactions/$allReactions"
+        val skipsStr = if(results.skips > 0) "(including ${results.skips} skips) " else " "
+
+
+        return """Incorrect reactions: $falseReactions ${skipsStr}with avg time $avgFalseTime ms
+Correct reactions: $nonFalseReactions with avg time $avgNonFalseTime ms
+Final score $nonFalseReactions/$allReactions"""
     }
 }
 
