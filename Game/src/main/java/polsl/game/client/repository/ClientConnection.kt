@@ -18,7 +18,7 @@ import polsl.game.proto.RequestProto
 import polsl.game.server.data.NameResult
 import polsl.game.server.data.Players
 import polsl.game.server.data.Results
-import polsl.game.server.repository.Question
+import polsl.game.server.repository.Prompt
 import polsl.game.spec.DeviceSpecifications
 import polsl.game.spec.PacketMerger
 import polsl.game.spec.PacketSplitter
@@ -36,8 +36,8 @@ class ClientConnection(
 
     private val _userJoined = MutableSharedFlow<Players>()
     val userJoined = _userJoined.asSharedFlow()
-    private val _question = MutableSharedFlow<Question>()
-    val question = _question.asSharedFlow()
+    private val _prompt = MutableSharedFlow<Prompt>()
+    val question = _prompt.asSharedFlow()
     private val _answer = MutableSharedFlow<Int>()
     val answer = _answer.asSharedFlow()
     private val _haystack = MutableSharedFlow<Int>()
@@ -83,7 +83,7 @@ class ClientConnection(
                 .onEach {
                     it.nameResult?.let { error -> _nameResult.emit(error) }
                     it.userJoined?.let { userJoined -> _userJoined.emit(userJoined) }
-                    it.question?.let { question -> _question.emit(question) }
+                    it.prompt?.let { question -> _prompt.emit(question) }
                     it.answerId?.let { answer -> _answer.emit(answer) }
                     it.isGameOver?.let { isGameOver -> _isGameOver.emit(isGameOver) }
                     it.result?.let { results -> _result.emit(results) }

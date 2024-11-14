@@ -4,8 +4,8 @@ import android.bluetooth.BluetoothDevice
 import no.nordicsemi.android.ble.data.Data
 import polsl.game.proto.OpCodeProto
 import polsl.game.proto.RequestProto
-import polsl.game.server.repository.Question
-import polsl.game.server.repository.toQuestion
+import polsl.game.server.repository.Prompt
+import polsl.game.server.repository.toPrompt
 import polsl.game.server.data.Players
 import polsl.game.server.data.Results
 import polsl.game.server.data.toPlayers
@@ -20,7 +20,7 @@ import polsl.game.server.data.toGameParams
  */
 class Request : ReadResponse() {
     var userJoined: Players? = null
-    var question: Question? = null
+    var prompt: Prompt? = null
     var answerId: Int? = null
     var isGameOver: Boolean? = null
     var result: Results? = null
@@ -34,7 +34,7 @@ class Request : ReadResponse() {
         val request = RequestProto.ADAPTER.decode(bytes)
         when (request.opCode) {
             OpCodeProto.PLAYERS -> { userJoined = request.players?.toPlayers() }
-            OpCodeProto.NEW_QUESTION -> { question = request.question?.toQuestion() }
+            OpCodeProto.NEW_QUESTION -> { prompt = request.prompt?.toPrompt() }
             OpCodeProto.RESPONSE -> { answerId = request.answerId }
             OpCodeProto.GAME_OVER -> { isGameOver = request.isGameOver }
             OpCodeProto.RESULT -> { result = request.results?.toResults() }

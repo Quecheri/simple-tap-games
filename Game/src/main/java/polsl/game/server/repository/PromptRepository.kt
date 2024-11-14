@@ -6,16 +6,16 @@ import kotlin.random.Random
 @Singleton
 class QuestionRepository @Inject constructor(
 ) {
-    fun getNimQuestion(haystack : Int): Question {
+    fun getNimPrompt(haystack : Int): Prompt {
         val answers: List<Answer> = listOf(Answer("1",1),Answer("2",2),Answer("3",3))
-        return Question("How many sticks?",answers.take(haystack),null)
+        return Prompt("How many sticks?",answers.take(haystack),null)
     }
-    fun getFastReactionQuestion(): Question {
+    fun getFastReactionPrompt(): Prompt {
         val randInt = Random.nextInt(1000)
         return if(randInt<800)
-            Question(SHOULD_CLICK, emptyList(),null)
+            Prompt(SHOULD_CLICK, emptyList(),null)
         else
-            Question(SHOULD_NOT_CLICK,emptyList(),null)
+            Prompt(SHOULD_NOT_CLICK,emptyList(),null)
     }
 
 }

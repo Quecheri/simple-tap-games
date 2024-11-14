@@ -1,6 +1,6 @@
 package polsl.game.server.data
 
-import polsl.game.server.repository.Question
+import polsl.game.server.repository.Prompt
 
 sealed interface GameState
 
@@ -10,5 +10,5 @@ data object DownloadingQuestions: GameState
 data object WaitingForRound: GameState
 
 data class Round(
-    val question: Question
+    val prompt: Prompt
 ): GameState

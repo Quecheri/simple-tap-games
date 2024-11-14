@@ -107,7 +107,7 @@ fun ServerScreen(
                                             modifier = Modifier.padding(16.dp)
                                         )
                                         StringQuestionContentView(
-                                            question = currentState.question.question,
+                                            question = currentState.prompt.prompt,
                                             answers = serverViewState.toViewState(),
                                             ticks = ticks,
                                             modifier = Modifier.fillMaxWidth(),
@@ -121,7 +121,7 @@ fun ServerScreen(
                                     GameType.FAST_REACTION ->
                                     {
                                         ImageQuestionContentView(
-                                            shouldReact = currentState.question.question==SHOULD_CLICK,
+                                            shouldReact = currentState.prompt.prompt==SHOULD_CLICK,
                                             ticks = ticks,
                                             progress = serverViewModel.getProgress(),
                                             modifier = Modifier.fillMaxWidth(),

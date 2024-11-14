@@ -1,7 +1,7 @@
 package polsl.game.client.data
 
 import polsl.game.server.model.toViewState
-import polsl.game.server.repository.Question
+import polsl.game.server.repository.Prompt
 import polsl.game.server.data.DisplayAnswer
 import polsl.game.server.data.Players
 import polsl.game.server.data.Results
@@ -15,7 +15,7 @@ import polsl.game.server.data.NameResult
  * @property correctAnswerId    correct answer id.
  * @property selectedAnswerId   selected answer id.
  * @property ticks              timer duration.
- * @property question           question sent from the server.
+ * @property prompt           question sent from the server.
  * @property userJoined         a list of all joined players.
  * @property isGameOver         returns true when game is over.
  * @property result             a list of players and their scores.
@@ -28,7 +28,7 @@ data class ClientViewState(
     val correctAnswerId: Int? = null,
     val selectedAnswerId: Int? = null,
     val ticks: Long? = null,
-    val question: Question? = null,
+    val prompt: Prompt? = null,
     val userJoined: Players? = null,
     val isGameOver: Boolean? = null,
     val isYourTurn: Boolean = false,
@@ -63,7 +63,7 @@ data class ClientViewState(
 }
 
 fun ClientViewState.toViewState(): List<DisplayAnswer> {
-    return question?.let { question ->
+    return prompt?.let { question ->
         question.answers.map { it.toViewState(selectedAnswerId, correctAnswerId, isTimerRunning) }
     } ?: emptyList()
 }

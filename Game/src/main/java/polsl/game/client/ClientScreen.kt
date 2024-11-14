@@ -66,7 +66,7 @@ fun ClientScreen(
                                 )
                                 else -> {
 
-                                        clientViewState.question?.let {
+                                        clientViewState.prompt?.let {
                                             if(clientViewState.isYourTurn)
                                             {
                                                 when(clientViewState.gameParams!!.gameType)
@@ -78,7 +78,7 @@ fun ClientScreen(
                                                             modifier = Modifier.padding(16.dp)
                                                         )
                                                         StringQuestionContentView(
-                                                            question = clientViewState.question?.question,
+                                                            question = clientViewState.prompt?.prompt,
                                                             answers = clientViewState.toViewState(),
                                                             ticks = ticks,
                                                             modifier = Modifier.fillMaxWidth(),
@@ -92,7 +92,7 @@ fun ClientScreen(
                                                     GameType.FAST_REACTION ->
                                                     {
                                                         ImageQuestionContentView(
-                                                            shouldReact = clientViewState.question?.question==SHOULD_CLICK,
+                                                            shouldReact = clientViewState.prompt?.prompt==SHOULD_CLICK,
                                                             ticks = ticks,
                                                             progress = clientViewState.getProgress(),
                                                             modifier = Modifier.fillMaxWidth(),

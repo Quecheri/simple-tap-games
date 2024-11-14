@@ -1,12 +1,12 @@
 package polsl.game.server.model
 
-import polsl.game.server.repository.Question
+import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.QuestionRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
 abstract class GameStrategy(protected val questionRepository: QuestionRepository, protected val uintParam: UInt?)
 {
-    abstract fun getQuestion(): Question
+    abstract fun getQuestion(): Prompt
     abstract fun getGameStateString(): String
     abstract fun isGameOver(): Boolean
     abstract fun updateScore(result: Int)
@@ -23,9 +23,9 @@ class NimStrategy(questionRepository: QuestionRepository,
 ) : GameStrategy(questionRepository, uintParam)
 {
     private var haystack: Int = uintParam?.toInt() ?: 20
-    override fun getQuestion(): Question
+    override fun getQuestion(): Prompt
     {
-        return questionRepository.getNimQuestion(haystack)
+        return questionRepository.getNimPrompt(haystack)
     }
 
     override fun getGameStateString(): String {
@@ -55,10 +55,10 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
     private var shouldClick = false
     private var results = FastReactionResults(0,0,0,0,0)
 
-    override fun getQuestion(): Question
+    override fun getQuestion(): Prompt
     {
-        val q = questionRepository.getFastReactionQuestion()
-        shouldClick = q.question == SHOULD_CLICK
+        val q = questionRepository.getFastReactionPrompt()
+        shouldClick = q.prompt == SHOULD_CLICK
         return q
     }
 

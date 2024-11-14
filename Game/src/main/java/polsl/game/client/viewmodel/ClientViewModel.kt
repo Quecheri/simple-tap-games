@@ -55,7 +55,7 @@ class ClientViewModel @Inject constructor(
                                 selectedAnswerId = null,
                                 correctAnswerId = null,
                                 ticks = Timer.TOTAL_TIME,
-                                question = it,
+                                prompt = it,
                                 isYourTurn=true,
                             )
                             startCountDown()

@@ -36,7 +36,7 @@ data class ServerViewState(
 }
 fun ServerViewState.toViewState(): List<DisplayAnswer> {
     return when (state) {
-        is Round -> state.question.answers
+        is Round -> state.prompt.answers
             .map { it.toViewState(selectedAnswerId, correctAnswerId, isTimerRunning) }
         else -> emptyList()
     }

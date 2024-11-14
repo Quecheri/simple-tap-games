@@ -18,7 +18,7 @@ enum OpCodeProto {
 
 message RequestProto {
   OpCodeProto opCode      = 1;
-  QuestionProto question  = 2;
+  PromptProto prompt      = 2;
   int32 answerId          = 3;
   string name             = 4;
   ResultProto result      = 5;
@@ -33,7 +33,7 @@ message RequestProto {
   GameParamsProto gameParams = 14;
 }
 
-message QuestionProto {
+message PromptProto {
   string text                  = 1;
   repeated AnswerProto answers = 2;
 }

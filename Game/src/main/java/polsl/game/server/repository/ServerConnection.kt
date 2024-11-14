@@ -20,7 +20,6 @@ import polsl.game.spec.DeviceSpecifications
 import polsl.game.spec.PacketMerger
 import polsl.game.spec.PacketSplitter
 import polsl.game.server.data.QuestionResponse
-import polsl.game.server.data.Results
 import polsl.game.server.data.toProto
 import no.nordicsemi.android.ble.ktx.asResponseFlow
 import no.nordicsemi.android.ble.ktx.suspend
@@ -127,8 +126,8 @@ class ServerConnection(
      * Send question. The data is split into MTU size
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */
-    suspend fun sendQuestion(question: Question) {
-        val request = RequestProto(OpCodeProto.NEW_QUESTION, question = question.toProto())
+    suspend fun sendQuestion(prompt: Prompt) {
+        val request = RequestProto(OpCodeProto.NEW_QUESTION, prompt = prompt.toProto())
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
             .split(PacketSplitter())

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import polsl.game.server.repository.Question
+import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.QuestionRepository
 import polsl.game.server.repository.AdvertisingManager
 import polsl.game.server.data.*
@@ -40,7 +40,7 @@ class ServerViewModel @Inject constructor(
         MutableStateFlow(ServerViewState())
     val serverViewState = _serverState.asStateFlow()
     private var clients: MutableStateFlow<List<ServerConnection>> = MutableStateFlow(emptyList())
-    private lateinit var question: Question
+    private lateinit var prompt: Prompt
     private var rollingPointer = -1
     private val mapNameWithDevice: MutableStateFlow<List<Name>> = MutableStateFlow(emptyList())
 
@@ -119,10 +119,10 @@ class ServerViewModel @Inject constructor(
         {
             viewModelScope.launch {
                 _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
-                question = strategy!!.getQuestion()
+                prompt = strategy!!.getQuestion()
                 sendParams(gameType)
                 /** Send first Question */
-                showQuestion(question)
+                showQuestion(prompt)
             }
         }
         else
@@ -146,8 +146,8 @@ class ServerViewModel @Inject constructor(
            if (!strategy!!.isGameOver())
            {
                rollPointer()
-               question = strategy!!.getQuestion()
-               showQuestion(question)
+               prompt = strategy!!.getQuestion()
+               showQuestion(prompt)
            }else
            {
                _serverState.value = _serverState.value.copy(isGameOver = true)
@@ -162,11 +162,11 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    private fun showQuestion(question: Question) {
+    private fun showQuestion(prompt: Prompt) {
         viewModelScope.launch {
             if (rollingPointer == -1) {
                 _serverState.value = _serverState.value.copy(
-                    state = Round(question),
+                    state = Round(prompt),
                     ticks = Timer.TOTAL_TIME,
                     selectedAnswerId = null,
                     correctAnswerId = null,
@@ -175,7 +175,7 @@ class ServerViewModel @Inject constructor(
             }
             else{
                 _serverState.value = _serverState.value.copy(state = WaitingForRound)
-                clients.value[rollingPointer].sendQuestion(question)
+                clients.value[rollingPointer].sendQuestion(prompt)
             }
         }
     }
