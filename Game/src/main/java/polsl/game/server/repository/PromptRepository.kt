@@ -4,7 +4,7 @@ import javax.inject.Singleton
 import kotlin.random.Random
 
 @Singleton
-class QuestionRepository @Inject constructor(
+class PromptRepository @Inject constructor(
 ) {
     fun getNimPrompt(haystack : Int): Prompt {
         val answers: List<Answer> = listOf(Answer("1",1),Answer("2",2),Answer("3",3))

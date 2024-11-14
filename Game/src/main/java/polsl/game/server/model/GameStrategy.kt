@@ -1,10 +1,10 @@
 package polsl.game.server.model
 
 import polsl.game.server.repository.Prompt
-import polsl.game.server.repository.QuestionRepository
+import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-abstract class GameStrategy(protected val questionRepository: QuestionRepository, protected val uintParam: UInt?)
+abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
 {
     abstract fun getQuestion(): Prompt
     abstract fun getGameStateString(): String
@@ -18,14 +18,14 @@ abstract class GameStrategy(protected val questionRepository: QuestionRepository
 
 }
 
-class NimStrategy(questionRepository: QuestionRepository,
+class NimStrategy(promptRepository: PromptRepository,
                   uintParam: UInt?
-) : GameStrategy(questionRepository, uintParam)
+) : GameStrategy(promptRepository, uintParam)
 {
     private var haystack: Int = uintParam?.toInt() ?: 20
     override fun getQuestion(): Prompt
     {
-        return questionRepository.getNimPrompt(haystack)
+        return promptRepository.getNimPrompt(haystack)
     }
 
     override fun getGameStateString(): String {
@@ -45,9 +45,9 @@ class NimStrategy(questionRepository: QuestionRepository,
     }
 }
 
-class FastReactionStrategy(questionRepository: QuestionRepository,
+class FastReactionStrategy(promptRepository: PromptRepository,
                            uintParam: UInt?
-) : GameStrategy(questionRepository, uintParam)
+) : GameStrategy(promptRepository, uintParam)
 {
 
     private var initialNumberOfQuestions :Int = uintParam?.toInt() ?: 20
@@ -57,7 +57,7 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
 
     override fun getQuestion(): Prompt
     {
-        val q = questionRepository.getFastReactionPrompt()
+        val q = promptRepository.getFastReactionPrompt()
         shouldClick = q.prompt == SHOULD_CLICK
         return q
     }

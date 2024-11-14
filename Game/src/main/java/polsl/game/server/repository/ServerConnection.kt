@@ -114,6 +114,7 @@ class ServerConnection(
             .split(PacketSplitter())
             .suspend()
     }
+
     suspend fun sendHaystack(haystack: Int) {
         val request = RequestProto(OpCodeProto.HAYSTACK, haystackValue = haystack)
         val requestByteArray = request.encode()

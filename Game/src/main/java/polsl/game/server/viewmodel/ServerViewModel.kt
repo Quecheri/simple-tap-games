@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import polsl.game.server.repository.Prompt
-import polsl.game.server.repository.QuestionRepository
+import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.AdvertisingManager
 import polsl.game.server.data.*
 import polsl.game.server.repository.ServerConnection
@@ -32,7 +32,7 @@ class ServerViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val advertiser: AdvertisingManager,
     private val serverManager: ServerManager,
-    private val questionRepository: QuestionRepository,
+    private val promptRepository: PromptRepository,
 ) : TimerViewModel(context) {
     private val TAG: String = ServerViewModel::class.java.simpleName
 
@@ -105,11 +105,11 @@ class ServerViewModel @Inject constructor(
         when (gameType) {
             GameType.NIM -> {
                 Log.d("StartGame", "Starting NIM game")
-                strategy = NimStrategy(questionRepository, this.rounds)
+                strategy = NimStrategy(promptRepository, this.rounds)
             }
             GameType.FAST_REACTION -> {
                 Log.d("StartGame", "Starting Fast Reaction game")
-                strategy = FastReactionStrategy(questionRepository,this.rounds)
+                strategy = FastReactionStrategy(promptRepository,this.rounds)
             }
             GameType.NSY_GAME -> {
                 Log.d("StartGame", "NSY")
