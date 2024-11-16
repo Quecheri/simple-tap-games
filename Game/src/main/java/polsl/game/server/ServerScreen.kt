@@ -16,7 +16,6 @@ import polsl.game.server.data.Round
 import polsl.game.server.data.WaitingForPlayers
 import polsl.game.server.data.toViewState
 import polsl.game.server.view.PlayersNameDialog
-import polsl.game.server.view.StringQuestionContentView
 import polsl.game.server.view.ResultView
 import polsl.game.server.view.StartGameView
 import polsl.game.server.view.WaitingForClientsView
@@ -25,6 +24,7 @@ import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
 import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.view.NimContentView
 import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,20 +102,18 @@ fun ServerScreen(
                                 {
                                     GameType.NIM ->
                                     {
-                                        Text(
-                                            text = serverViewModel.getGameStateString(),
-                                            modifier = Modifier.padding(16.dp)
-                                        )
-                                        StringQuestionContentView(
+                                        NimContentView(
                                             question = currentState.question.question,
                                             answers = serverViewState.toViewState(),
                                             ticks = ticks,
+                                            randomSeed = serverViewModel. getSeed(),
+                                            numOfMatches = serverViewModel.getGameScore(),
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
                                                 serverViewModel.stopCountDown()
                                             },
-                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)}
+                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)},
                                         )
                                     }
                                     GameType.FAST_REACTION ->
@@ -141,15 +139,31 @@ fun ServerScreen(
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
-                            //Text(
-                            //    text = serverViewModel.getGameStateString(),
-                            //    modifier = Modifier.padding(16.dp)
-                            //)
-                            Text(
-                                text = "Wait for your turn",
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            when(serverViewModel.getGameType())
+                            {
+                                GameType.NIM ->
+                                {
+                                    NimContentView(
+                                        question = null,
+                                        answers = emptyList(),
+                                        ticks = 0,
+                                        randomSeed = serverViewModel.getSeed(),
+                                        numOfMatches = serverViewModel.getGameScore(),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onAnswerSelected = {},
+                                        onTimeOut = {},
+                                    )
+                                }
+                                GameType.FAST_REACTION ->
+                                {
 
+                                    Text(
+                                        text = "Wait for your turn",
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                                GameType.NSY_GAME -> TODO()
+                            }
                         }
                     }
 
