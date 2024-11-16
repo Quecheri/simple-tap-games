@@ -116,8 +116,8 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
         val nonFalseReactions = results.correctReactions
         val allReactions = falseReactions+nonFalseReactions
 
-        val avgFalseTime = if(falseReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
-        val avgNonFalseTime = if(nonFalseReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
+        val avgFalseTime = if(results.incorrectReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
+        val avgNonFalseTime = if(results.correctReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
 
         val skipsStr = if(results.skips > 0) "(including ${results.skips} skips) " else " "
 
