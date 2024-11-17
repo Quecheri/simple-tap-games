@@ -124,7 +124,7 @@ fun ServerScreen(
                                     GameType.FAST_REACTION ->
                                     {
                                         ImageQuestionContentView(
-                                            shouldReact = currentState.question.question==SHOULD_CLICK,
+                                            shouldReact = currentState.prompt.prompt==SHOULD_CLICK,
                                             ticks = ticks,
                                             progress = serverViewModel.getProgress(),
                                             modifier = Modifier.fillMaxWidth(),

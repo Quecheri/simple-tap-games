@@ -49,7 +49,7 @@ fun BlinkContentView(
                 shouldFlash = true
                 delay(flashTimeout)
                 shouldFlash = false
-                delay(flashTimeout/2)
+                delay(flashTimeout/3)
                 onTimeout();
             }
         }

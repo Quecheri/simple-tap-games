@@ -33,7 +33,7 @@ import kotlin.random.Random
  */
 @Composable
 fun NimContentView(
-    question: String?,
+    prompt: String?,
     answers: List<DisplayAnswer>,
     ticks: Long,
     randomSeed: Int,
@@ -47,12 +47,12 @@ fun NimContentView(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TimerView(
-            key = question ?: 0,
-            duration = if(question!=null)ticks else 0,
+            key = prompt ?: 0,
+            duration = if(prompt!=null)ticks else 0,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onTimeOut = { if(question!=null)onTimeOut(1)},
+            onTimeOut = { if(prompt!=null)onTimeOut(1)},
         )
         val random = Random(randomSeed)
 
@@ -111,7 +111,7 @@ fun NimContentView(
 private fun NimContentView_Preview() {
     NordicTheme {
         NimContentView(
-            question =
+            prompt =
             "",
             ticks = 4000,
             numOfMatches = 50,

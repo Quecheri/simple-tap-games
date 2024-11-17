@@ -1,6 +1,5 @@
 package polsl.game.server.model
 
-import android.util.Log
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
@@ -61,8 +60,8 @@ class FastReactionStrategy(promptRepository: PromptRepository,
 ) : GameStrategy(promptRepository, uintParam)
 {
 
-    private var initialNumberOfQuestions :Int = uintParam?.toInt() ?: 20
-    private var numberOfQuestions = initialNumberOfQuestions
+    private var initialNumberOfPrompts :Int = uintParam?.toInt() ?: 20
+    private var numberOfQuestions = initialNumberOfPrompts
     private var shouldClick = false
     private var rollingPointer: Int = 0
     private var results = FastReactionResults(0,0,0,0,0)
@@ -121,7 +120,7 @@ class FastReactionStrategy(promptRepository: PromptRepository,
 
     override fun getProgress():Float
     {
-        return 1 - numberOfQuestions.toFloat() / initialNumberOfQuestions
+        return 1 - numberOfQuestions.toFloat() / initialNumberOfPrompts
     }
     override fun rollPointer(param: Int): Int //TODO IMPLEMENT PROPERLY
     {
