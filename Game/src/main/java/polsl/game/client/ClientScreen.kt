@@ -26,6 +26,7 @@ import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
 import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.view.NimContentView
 import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,14 +76,12 @@ fun ClientScreen(
                                                 {
                                                     GameType.NIM ->
                                                     {
-                                                        Text(
-                                                            text = "Haystack: " + clientViewState.haystack,
-                                                            modifier = Modifier.padding(16.dp)
-                                                        )
-                                                        StringQuestionContentView(
-                                                            question = clientViewState.prompt?.prompt,
+                                                        NimContentView(
+                                                            prompt = clientViewState.prompt?.prompt,
                                                             answers = clientViewState.toViewState(),
                                                             ticks = ticks,
+                                                            randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
+                                                            numOfMatches = clientViewState.haystack!!,
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
                                                                 clientViewModel.sendAnswer(answerChosen)
@@ -142,6 +141,27 @@ fun ClientScreen(
                                                                     clientViewModel.stopCountDown()},
                                                                 onTimeout = {},
                                                             )
+                                                        GameType.NIM ->
+                                                        {
+                                                            NimContentView(
+                                                                prompt = null,
+                                                                answers = emptyList(),
+                                                                ticks = 0,
+                                                                randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
+                                                                numOfMatches = clientViewState.haystack!!,
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                onAnswerSelected = {},
+                                                                onTimeOut = {},
+                                                            )
+                                                        }
+                                                        GameType.FAST_REACTION ->
+                                                        {
+
+                                                            Text(
+                                                                text = "Wait for your turn",
+                                                                modifier = Modifier.padding(16.dp)
+                                                            )
+                                                        }
                                                         else ->
                                                             Text(
                                                                 text = "Wait for your turn",

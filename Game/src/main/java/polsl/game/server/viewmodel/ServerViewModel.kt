@@ -89,6 +89,16 @@ class ServerViewModel @Inject constructor(
         return if(prompt!=null) prompt.prompt else ""
     }
 
+    fun getGameScore():Int
+    {
+        return if(strategy!=null) strategy!!.getScore() else 0
+    }
+
+    fun getSeed():Int
+    {
+        return rounds?.toInt() ?: 0
+    }
+
     fun getProgress():Float
     {
        return strategy!!.getProgress()

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,21 +27,25 @@ fun ResultView(result: String) {
             onClick = { openDialog = false }
         )
     } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                stickyHeader {
-                    Surface(shadowElevation = 4.dp) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.padding(16.dp),
-                        )
-                        {
-                            Text(text = result)
-                        }
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            stickyHeader {
+                Surface(shadowElevation = 4.dp) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = result,
+                            style = MaterialTheme.typography.titleLarge,
+                            )
                     }
                 }
             }
+        }
     }
 }
 

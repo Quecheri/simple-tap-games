@@ -8,15 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import polsl.game.server.viewmodel.Timer
 import no.nordicsemi.android.common.theme.NordicTheme
 
@@ -43,20 +41,20 @@ fun TimerView(
             finishedListener = { if (progress == 1f) {progress = 0f}
                 onTimeOut()}
         )
-        CircularProgressIndicator(
-            color = checkColor(duration),
-            progress = progressAnimation,
-            strokeWidth = 24.dp,
-            modifier = Modifier.padding(end = 16.dp)
+        LinearProgressIndicator(
+            progress = {progressAnimation},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
         )
         LaunchedEffect(key1 = key) {
             progress = if (progress == 1f) 0f else 1f
         }
-        Text(
-            text = "Timer:  ${duration / 1000} s",
-            fontSize = 36.sp,
-            color = checkColor(duration)
-        )
+        //Text(
+        //    text = "Timer:  ${duration / 1000} s",
+        //    fontSize = 36.sp,
+        //   color = checkColor(duration)
+        //)
     }
 }
 

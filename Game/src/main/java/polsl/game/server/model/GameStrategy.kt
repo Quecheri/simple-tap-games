@@ -67,6 +67,9 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     private var rollingPointer: Int = 0
     private var results = FastReactionResults(0,0,0,0,0)
 
+    init {
+        promptRepository.initFastReactionPrompt(initialNumberOfPrompts);
+    }
     override fun getPrompt(): Prompt
     {
         val q = promptRepository.getFastReactionPrompt()
@@ -135,10 +138,11 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         val nonFalseReactions = results.correctReactions
         val allReactions = falseReactions+nonFalseReactions
 
-        val avgFalseTime = if(falseReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
-        val avgNonFalseTime = if(nonFalseReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
+        val avgFalseTime = if(results.incorrectReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
+        val avgNonFalseTime = if(results.correctReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
 
-        val skipsStr = if(results.skips > 0) "(including ${results.skips} skips) " else " "
+        val skipWord = if(results.skips == 1) "skip" else "skips"
+        val skipsStr = if(results.skips > 0) "(including ${results.skips} $skipWord) " else " "
 
 
         return """Incorrect reactions: $falseReactions ${skipsStr}with avg time $avgFalseTime ms

@@ -29,6 +29,7 @@ import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
 import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.view.NimContentView
 import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,26 +107,24 @@ fun ServerScreen(
                                 {
                                     GameType.NIM ->
                                     {
-                                        Text(
-                                            text = serverViewModel.getGameStateString(),
-                                            modifier = Modifier.padding(16.dp)
-                                        )
-                                        StringQuestionContentView(
-                                            question = currentState.prompt.prompt,
+                                        NimContentView(
+                                            prompt = currentState.prompt.prompt,
                                             answers = serverViewState.toViewState(),
                                             ticks = ticks,
+                                            randomSeed = serverViewModel. getSeed(),
+                                            numOfMatches = serverViewModel.getGameScore(),
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
                                                 serverViewModel.stopCountDown()
                                             },
-                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)}
+                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(1)},
                                         )
                                     }
                                     GameType.FAST_REACTION ->
                                     {
                                         ImageQuestionContentView(
-                                            shouldReact = currentState.prompt.prompt==SHOULD_CLICK,
+                                            shouldReact = currentState.question.question==SHOULD_CLICK,
                                             ticks = ticks,
                                             progress = serverViewModel.getProgress(),
                                             modifier = Modifier.fillMaxWidth(),
@@ -205,12 +204,22 @@ fun ServerScreen(
                                         )
                                 }
 
-                                else ->
+                                GameType.NIM ->
                                 {
-                                    //Text(
-                                    //    text = serverViewModel.getGameStateString(),
-                                    //    modifier = Modifier.padding(16.dp)
-                                    //)
+                                    NimContentView(
+                                        prompt = null,
+                                        answers = emptyList(),
+                                        ticks = 0,
+                                        randomSeed = serverViewModel.getSeed(),
+                                        numOfMatches = serverViewModel.getGameScore(),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onAnswerSelected = {},
+                                        onTimeOut = {},
+                                    )
+                                }
+                                GameType.FAST_REACTION ->
+                                {
+
                                     Text(
                                         text = "Wait for your turn",
                                         modifier = Modifier.padding(16.dp)
