@@ -22,9 +22,11 @@ import polsl.game.server.repository.ServerManager
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.observer.ServerObserver
+import polsl.game.server.model.CombinationStrategy
 import polsl.game.server.model.FastReactionStrategy
 import polsl.game.server.model.GameStrategy
 import polsl.game.server.model.NimStrategy
+import polsl.game.server.repository.SHOULD_NOT_CLICK
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +53,7 @@ class ServerViewModel @Inject constructor(
 
     internal fun getGameType():GameType
     {
-        return if (gameType!=null) gameType!! else GameType.NSY_GAME
+        return if (gameType!=null) gameType!! else GameType.NIM
     }
 
     internal fun getResultString():String
@@ -67,16 +69,24 @@ class ServerViewModel @Inject constructor(
             GameType.FAST_REACTION -> {
                 result = (strategy as FastReactionStrategy).getResultSting()
             }
-            GameType.NSY_GAME -> {
-                assert(false)
+            GameType.COMBINATION -> {
+                result = getGameStateString()
             }
         }
 
         return result
     }
+    fun isCombinationPreview():Boolean
+    {
+        return getGameType()==GameType.COMBINATION && (strategy!! as CombinationStrategy).getSetup()
+    }
     fun getGameStateString():String
     {
         return if(strategy!=null) strategy!!.getGameStateString() else ""
+    }
+    fun getPromptString():String
+    {
+        return if(prompt!=null) prompt.prompt else ""
     }
 
     fun getProgress():Float
@@ -87,13 +97,7 @@ class ServerViewModel @Inject constructor(
     init {
         startServer()
     }
-    private fun rollPointer() // TODO move rollPointer to strategy - it should be randomized for second game
-    {
-        rollingPointer++
-        if(rollingPointer==clients.value.size) {
-            rollingPointer = -1
-        }
-    }
+
 
     fun startGame(gameType: GameType, timeout : String, rounds : String) {
         this.timeout = timeout.toUIntOrNull()
@@ -111,15 +115,17 @@ class ServerViewModel @Inject constructor(
                 Log.d("StartGame", "Starting Fast Reaction game")
                 strategy = FastReactionStrategy(promptRepository,this.rounds)
             }
-            GameType.NSY_GAME -> {
-                Log.d("StartGame", "NSY")
+            GameType.COMBINATION -> {
+                Log.d("StartGame", "COMBINATION")
+                strategy = CombinationStrategy(promptRepository,this.rounds)
+                rollingPointer = strategy!!.rollPointer(clients.value.size)
             }
         }
         if(strategy!=null)
         {
             viewModelScope.launch {
                 _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
-                prompt = strategy!!.getQuestion()
+                prompt = strategy!!.getPrompt()
                 sendParams(gameType)
                 /** Send first Question */
                 showQuestion(prompt)
@@ -145,8 +151,8 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
-               rollPointer()
-               prompt = strategy!!.getQuestion()
+               rollingPointer = strategy!!.rollPointer(clients.value.size)
+               prompt = strategy!!.getPrompt()
                showQuestion(prompt)
            }else
            {
@@ -403,7 +409,7 @@ class ServerViewModel @Inject constructor(
 enum class GameType(val value: Int) {
     NIM(0),
     FAST_REACTION(1),
-    NSY_GAME(2);
+    COMBINATION(2);
 
     companion object {
         fun fromInt(value: Int): GameType? {
@@ -414,7 +420,7 @@ enum class GameType(val value: Int) {
         return when (this) {
             NIM -> "NIM"
             FAST_REACTION -> "Fast reaction"
-            NSY_GAME -> "NSY game"
+            COMBINATION -> "Combination game"
         }
     }
 }

@@ -1,6 +1,8 @@
 package polsl.game.server
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -8,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,6 +27,7 @@ import polsl.game.server.viewmodel.ServerViewModel
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
+import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageQuestionContentView
 import polsl.game.server.viewmodel.GameType
 
@@ -132,7 +136,38 @@ fun ServerScreen(
                                             onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(-1)}
                                         )
                                     }
-                                    GameType.NSY_GAME -> TODO()
+                                    GameType.COMBINATION ->
+                                        if (serverViewModel.getPromptString()==SHOULD_CLICK) {
+                                            BlinkContentView(
+                                                title = "Recreate combination",
+                                                modifier = Modifier.fillMaxWidth(),
+                                                ticks = ticks,
+                                                flashColor = Color.Green,
+                                                onScreenClicked = {
+                                                    serverViewModel.selectedAnswerServer(1)
+                                                    serverViewModel.stopCountDown()
+                                                },
+                                                onTimeout = {
+                                                    if (serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(
+                                                        -1
+                                                    )
+                                                },
+                                            )
+                                        }
+                                        else {
+
+                                                BlinkContentView(
+                                                    title = "Observe combination",
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    ticks = ticks,
+                                                    startWithFlash = true,
+                                                    flashColor = Color.Yellow,
+                                                    onScreenClicked = {},
+                                                    onTimeout = { serverViewModel.selectedAnswerServer(1) },
+                                                )
+
+                                        }
+
                                 }
                         }
                     }
@@ -141,14 +176,47 @@ fun ServerScreen(
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
-                            //Text(
-                            //    text = serverViewModel.getGameStateString(),
-                            //    modifier = Modifier.padding(16.dp)
-                            //)
-                            Text(
-                                text = "Wait for your turn",
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            when(serverViewModel.getGameType())
+                            {
+                                GameType.COMBINATION ->
+                                    if (!serverViewModel.isCombinationPreview())
+                                    {
+                                        BlinkContentView(
+                                            title = "Recreate combination",
+                                            modifier = Modifier.fillMaxWidth(),
+                                            ticks = 99999,
+                                            flashColor = Color.Red,
+                                            onScreenClicked = {
+                                                serverViewModel.selectedAnswerServer(-2)
+                                                serverViewModel.stopCountDown()
+                                            },
+                                            onTimeout = {},
+                                        )
+                                    }
+                                else{
+
+                                        BlinkContentView(
+                                            title = "Observe combination",
+                                            modifier = Modifier.fillMaxWidth(),
+                                            ticks = 99999,
+                                            flashColor = Color.Yellow,
+                                            onScreenClicked = {},
+                                            onTimeout = {},
+                                        )
+                                }
+
+                                else ->
+                                {
+                                    //Text(
+                                    //    text = serverViewModel.getGameStateString(),
+                                    //    modifier = Modifier.padding(16.dp)
+                                    //)
+                                    Text(
+                                        text = "Wait for your turn",
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
 
                         }
                     }

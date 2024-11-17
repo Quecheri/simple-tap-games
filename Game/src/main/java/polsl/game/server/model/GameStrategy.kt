@@ -1,16 +1,18 @@
 package polsl.game.server.model
 
+import android.util.Log
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
 abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
 {
-    abstract fun getQuestion(): Prompt
+    abstract fun getPrompt(): Prompt
     abstract fun getGameStateString(): String
     abstract fun isGameOver(): Boolean
     abstract fun updateScore(result: Int)
     abstract fun getScore() : Int
+    abstract fun rollPointer(param: Int = 0) : Int
     open fun getProgress():Float
     {
         return 0F
@@ -23,7 +25,8 @@ class NimStrategy(promptRepository: PromptRepository,
 ) : GameStrategy(promptRepository, uintParam)
 {
     private var haystack: Int = uintParam?.toInt() ?: 20
-    override fun getQuestion(): Prompt
+    private var rollingPointer: Int = -1
+    override fun getPrompt(): Prompt
     {
         return promptRepository.getNimPrompt(haystack)
     }
@@ -43,6 +46,14 @@ class NimStrategy(promptRepository: PromptRepository,
     override fun getScore(): Int {
         return haystack
     }
+    override fun rollPointer(param: Int): Int
+    {
+        rollingPointer++
+        if(rollingPointer==param) {
+            rollingPointer = -1
+        }
+        return rollingPointer;
+    }
 }
 
 class FastReactionStrategy(promptRepository: PromptRepository,
@@ -53,9 +64,10 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     private var initialNumberOfQuestions :Int = uintParam?.toInt() ?: 20
     private var numberOfQuestions = initialNumberOfQuestions
     private var shouldClick = false
+    private var rollingPointer: Int = 0
     private var results = FastReactionResults(0,0,0,0,0)
 
-    override fun getQuestion(): Prompt
+    override fun getPrompt(): Prompt
     {
         val q = promptRepository.getFastReactionPrompt()
         shouldClick = q.prompt == SHOULD_CLICK
@@ -108,7 +120,14 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     {
         return 1 - numberOfQuestions.toFloat() / initialNumberOfQuestions
     }
-
+    override fun rollPointer(param: Int): Int //TODO IMPLEMENT PROPERLY
+    {
+        rollingPointer++
+        if(rollingPointer==param) {
+            rollingPointer = -1
+        }
+        return rollingPointer;
+    }
 
     fun getResultSting():String
     {
@@ -126,6 +145,85 @@ class FastReactionStrategy(promptRepository: PromptRepository,
 Correct reactions: $nonFalseReactions with avg time $avgNonFalseTime ms
 Final score $nonFalseReactions/$allReactions"""
     }
+}
+class CombinationStrategy(promptRepository: PromptRepository,
+                  uintParam: UInt?
+) : GameStrategy(promptRepository, uintParam)
+{
+    private var maxCombinationLength: Int = uintParam?.toInt() ?: 20
+    private var currentCombinationLength: Int = 0
+    private var combinationFailed = false
+    private var shouldClick = false
+    private var setup = true
+    private var rollingPointer: Int = 0
+    private var current: Int = 0
+    private var responseQueue: MutableList<Int> = mutableListOf()
+
+    override fun getPrompt(): Prompt
+    {
+        return promptRepository.getCombinationPrompt(setup)
+    }
+    fun getSetup():Boolean
+    {
+        return setup
+    }
+    override fun getGameStateString(): String {
+        return if(combinationFailed)
+        {"You have managed to properly recreate up to combination [$currentCombinationLength] out of [$maxCombinationLength]"}
+        else
+        {"You have completed all [$maxCombinationLength] combinations"}
+    }
+
+    override fun isGameOver(): Boolean {
+        return currentCombinationLength>=maxCombinationLength||combinationFailed
+    }
+
+    override fun updateScore(result: Int) {
+        if(result < 0) combinationFailed  = true
+    }
+
+    override fun getScore(): Int {
+        return currentCombinationLength
+    }
+    override fun rollPointer(param: Int): Int {
+        if(responseQueue.isEmpty()) initializeCombinationList(param)
+        if(rollingPointer==responseQueue.count())
+        {
+            initializeCombinationList(param)
+            rollingPointer=0
+        }
+        else if(rollingPointer==responseQueue.count()/2)
+        {
+            setup=false
+        }
+        return responseQueue[rollingPointer++]
+    }
+    private fun getRandomDistinctInt(excludedValue:Int?, maxIndex: Int): Int {
+        var value: Int
+        if(excludedValue==null) {
+            return (-1 until maxIndex).random()
+        }
+
+        do {
+            value = (-1 until maxIndex).random()
+        } while (value == excludedValue)
+        return value
+    }
+
+    private fun initializeCombinationList(maxIndex: Int) {
+        currentCombinationLength++
+        setup=true
+        responseQueue.clear()
+        responseQueue.add(getRandomDistinctInt(null,maxIndex))
+        for (i in 1 until currentCombinationLength) {
+            val valueToAdd = getRandomDistinctInt(responseQueue.last(), maxIndex)
+            responseQueue.add(valueToAdd)
+
+        }
+        // Duplicate list
+        responseQueue.addAll(responseQueue)
+    }
+
 }
 
 data class FastReactionResults(

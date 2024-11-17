@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +24,7 @@ import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.permissions.ble.RequireLocation
 import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
+import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageQuestionContentView
 import polsl.game.server.viewmodel.GameType
 
@@ -102,15 +104,59 @@ fun ClientScreen(
                                                             onTimeOut = { if(clientViewModel.timerRunning) clientViewModel.sendAnswer(-1)},
                                                         )
                                                     }
-                                                    GameType.NSY_GAME -> TODO()
+                                                    GameType.COMBINATION ->
+                                                        if (clientViewState.prompt?.prompt==SHOULD_CLICK)
+                                                        BlinkContentView(
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            ticks = ticks,
+                                                            flashColor = Color.Green,
+                                                            onScreenClicked = {
+                                                                clientViewModel.sendAnswer(1)
+                                                                clientViewModel.stopCountDown()},
+                                                            onTimeout = {if(clientViewModel.timerRunning) clientViewModel.sendAnswer(-1)},
+                                                        )
+                                                        else
+                                                            {
+                                                                BlinkContentView(
+                                                                    modifier = Modifier.fillMaxWidth(),
+                                                                    ticks = ticks,
+                                                                    flashColor = Color.Yellow,
+                                                                    startWithFlash = true,
+                                                                    onScreenClicked = {},
+                                                                    onTimeout = {clientViewModel.sendAnswer(1)},
+                                                                )
+                                                            }
                                                 }
                                             }
                                             else
                                             {
-                                                Text(
-                                                    text = "Wait for your turn",
-                                                    modifier = Modifier.padding(16.dp)
-                                                )
+                                                if(clientViewState.gameParams != null){
+                                                    when(clientViewState.gameParams!!.gameType)
+                                                    {
+                                                        GameType.COMBINATION->
+                                                            BlinkContentView(
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                ticks = 99999,
+                                                                flashColor =  Color.Red,
+                                                                onScreenClicked = {clientViewModel.sendAnswer(-1)
+                                                                    clientViewModel.stopCountDown()},
+                                                                onTimeout = {},
+                                                            )
+                                                        else ->
+                                                            Text(
+                                                                text = "Wait for your turn",
+                                                                modifier = Modifier.padding(16.dp)
+                                                            )
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Text(
+                                                        text = "Wait for your turn",
+                                                        modifier = Modifier.padding(16.dp)
+                                                    )
+                                                }
+
                                             }
                                         } ?: run {
                                             if (clientViewState.openDialog) {

@@ -17,6 +17,10 @@ class PromptRepository @Inject constructor(
         else
             Prompt(SHOULD_NOT_CLICK,emptyList(),null)
     }
+    fun getCombinationPrompt(setup:Boolean): Prompt {
+        return if(setup) Prompt(SHOULD_NOT_CLICK, emptyList(),null)
+        else Prompt(SHOULD_CLICK, emptyList(),null)
+    }
 
 }
 

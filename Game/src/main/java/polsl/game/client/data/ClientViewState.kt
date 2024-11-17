@@ -40,6 +40,7 @@ data class ClientViewState(
     val haystack: Int? = null,
     val resultStr: String? = null,
     val gameParams: GameParams? = null,
+    val blinkQueue: Int? = null,
 ) {
     val isTimerRunning: Boolean = ticks?.let { it > 0 } == true
 
