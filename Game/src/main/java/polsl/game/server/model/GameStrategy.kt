@@ -55,6 +55,10 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
     private var shouldClick = false
     private var results = FastReactionResults(0,0,0,0,0)
 
+    init {
+        questionRepository.initFastReactionQuestions(initialNumberOfQuestions);
+    }
+
     override fun getQuestion(): Question
     {
         val q = questionRepository.getFastReactionQuestion()
@@ -119,7 +123,8 @@ class FastReactionStrategy(questionRepository: QuestionRepository,
         val avgFalseTime = if(results.incorrectReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
         val avgNonFalseTime = if(results.correctReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
 
-        val skipsStr = if(results.skips > 0) "(including ${results.skips} skips) " else " "
+        val skipWord = if(results.skips == 1) "skip" else "skips"
+        val skipsStr = if(results.skips > 0) "(including ${results.skips} $skipWord) " else " "
 
 
         return """Incorrect reactions: $falseReactions ${skipsStr}with avg time $avgFalseTime ms
