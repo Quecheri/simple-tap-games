@@ -54,11 +54,10 @@ data class ClientViewState(
 
     internal fun getProgress() :Float
     {
-        if(gameParams?.numParam1 != null)
+        if(gameParams?.numParam1 != null && haystack!=null)
         {
-            return 1-haystack!!.toFloat()/ gameParams.numParam1!!
+            return 1-haystack.toFloat()/ gameParams.numParam1!!
         }
-        assert(false)
         return 0F
     }
 }
