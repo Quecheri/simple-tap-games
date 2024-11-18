@@ -23,6 +23,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
 fun BlinkContentView(
     title: String = "",
     modifier: Modifier = Modifier,
+    clicable: Boolean = true,
     ticks: Long = 5000,
     flashTimeout:Long = 300,
     flashColor: Color = Color.Red,
@@ -72,7 +73,7 @@ fun BlinkContentView(
         modifier = modifier
             .fillMaxSize()
             .clickable {
-                if (shouldStart) {
+                if (shouldStart && clicable) {
                     shouldStart = false
                     shouldFlash = true
                     coroutineScope.launch {

@@ -159,6 +159,7 @@ fun ServerScreen(
                                                     title = "Observe combination",
                                                     modifier = Modifier.fillMaxWidth(),
                                                     ticks = ticks,
+                                                    clicable = false,
                                                     startWithFlash = true,
                                                     flashColor = Color.Yellow,
                                                     onScreenClicked = {},
@@ -178,7 +179,7 @@ fun ServerScreen(
                             when(serverViewModel.getGameType())
                             {
                                 GameType.COMBINATION ->
-                                    if (!serverViewModel.isCombinationPreview())
+                                    if (serverViewModel.getPromptString() == SHOULD_CLICK)
                                     {
                                         BlinkContentView(
                                             title = "Recreate combination",
@@ -198,6 +199,7 @@ fun ServerScreen(
                                             title = "Observe combination",
                                             modifier = Modifier.fillMaxWidth(),
                                             ticks = 99999,
+                                            clicable = false,
                                             flashColor = Color.Yellow,
                                             onScreenClicked = {},
                                             onTimeout = {},

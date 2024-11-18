@@ -119,6 +119,7 @@ fun ClientScreen(
                                                                 BlinkContentView(
                                                                     modifier = Modifier.fillMaxWidth(),
                                                                     ticks = ticks,
+                                                                    clicable = false,
                                                                     flashColor = Color.Yellow,
                                                                     startWithFlash = true,
                                                                     onScreenClicked = {},

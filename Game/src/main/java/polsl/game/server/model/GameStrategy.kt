@@ -156,11 +156,10 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private var maxCombinationLength: Int = uintParam?.toInt() ?: 20
     private var currentCombinationLength: Int = 0
     private var combinationFailed = false
-    private var shouldClick = false
     private var setup = true
     private var rollingPointer: Int = 0
-    private var current: Int = 0
     private var responseQueue: MutableList<Int> = mutableListOf()
+    private var combination: MutableList<Int> = mutableListOf()
 
     override fun getPrompt(): Prompt
     {
@@ -215,16 +214,20 @@ class CombinationStrategy(promptRepository: PromptRepository,
 
     private fun initializeCombinationList(maxIndex: Int) {
         currentCombinationLength++
+
         setup=true
         responseQueue.clear()
-        responseQueue.add(getRandomDistinctInt(null,maxIndex))
-        for (i in 1 until currentCombinationLength) {
-            val valueToAdd = getRandomDistinctInt(responseQueue.last(), maxIndex)
-            responseQueue.add(valueToAdd)
-
+        if(currentCombinationLength==1)
+        {
+            combination.add(-1)
         }
-        // Duplicate list
-        responseQueue.addAll(responseQueue)
+        else
+        {
+            combination.add(getRandomDistinctInt(combination.last(), maxIndex))
+        }
+
+        responseQueue.addAll(combination)
+        responseQueue.addAll(combination)
     }
 
 }
