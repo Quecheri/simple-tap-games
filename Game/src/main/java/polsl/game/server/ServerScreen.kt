@@ -131,7 +131,7 @@ fun ServerScreen(
                                                 serverViewModel.selectedAnswerServer(answerChosen)
                                                 serverViewModel.stopCountDown()
                                             },
-                                            onTimeOut = {serverViewModel.selectedAnswerServer(-1)}
+                                            onTimeOut = {if(serverViewModel.timerRunning) serverViewModel.selectedAnswerServer(-1)}
                                         )
                                     }
                                     GameType.COMBINATION ->
