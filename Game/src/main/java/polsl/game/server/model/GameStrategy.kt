@@ -21,7 +21,17 @@ abstract class GameStrategy(protected val promptRepository: PromptRepository, pr
     abstract fun isGameOver(): Boolean
     abstract fun updateScore(result: Int)
     abstract fun getScore() : Int
-    abstract fun rollPointer(param: Int = 0) : Int
+
+    protected var rollingPointer: Int = -1
+    // Default implementation with sequential order.
+    open fun rollPointer(param: Int = 0) : Int
+    {
+        rollingPointer++
+        if(rollingPointer==param) {
+            rollingPointer = -1
+        }
+        return rollingPointer;
+    }
 }
 
 class NimStrategy(promptRepository: PromptRepository,
@@ -29,7 +39,6 @@ class NimStrategy(promptRepository: PromptRepository,
 ) : GameStrategy(promptRepository, uintParam)
 {
     private var haystack: Int = uintParam?.toInt() ?: 20
-    private var rollingPointer: Int = -1
     override fun getPrompt(): Prompt
     {
         return promptRepository.getNimPrompt(haystack)
@@ -50,14 +59,6 @@ class NimStrategy(promptRepository: PromptRepository,
     override fun getScore(): Int {
         return haystack
     }
-    override fun rollPointer(param: Int): Int
-    {
-        rollingPointer++
-        if(rollingPointer==param) {
-            rollingPointer = -1
-        }
-        return rollingPointer;
-    }
 }
 
 class FastReactionStrategy(promptRepository: PromptRepository,
@@ -68,7 +69,6 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     private var initialNumberOfPrompts :Int = uintParam?.toInt() ?: 20
     private var numberOfQuestions = initialNumberOfPrompts
     private var shouldClick = false
-    private var rollingPointer: Int = -1
     private var results = FastReactionResults(0,0,0,0,0)
 
     init {
@@ -123,15 +123,6 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         return numberOfQuestions
     }
 
-    override fun rollPointer(param: Int): Int //TODO IMPLEMENT PROPERLY
-    {
-        rollingPointer++
-        if(rollingPointer==param) {
-            rollingPointer = -1
-        }
-        return rollingPointer;
-    }
-
     fun getResultSting():String
     {
         val falseReactions = results.incorrectReactions + results.skips
@@ -158,9 +149,12 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private var currentCombinationLength: Int = 0
     private var combinationFailed = false
     private var setup = true
-    private var rollingPointer: Int = 0
     private var responseQueue: MutableList<Int> = mutableListOf()
     private var combination: MutableList<Int> = mutableListOf()
+
+    init {
+        rollingPointer = 0 //TODO should it start with 0?
+    }
 
     override fun getPrompt(): Prompt
     {
