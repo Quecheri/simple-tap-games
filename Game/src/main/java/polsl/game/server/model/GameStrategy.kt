@@ -3,6 +3,7 @@ package polsl.game.server.model
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
+import kotlin.random.Random
 
 //TODO zmiana na język polski
 //TODO dodanie wszytskich stringów do R.strings
@@ -24,13 +25,13 @@ abstract class GameStrategy(protected val promptRepository: PromptRepository, pr
 
     protected var rollingPointer: Int = -1
     // Default implementation with sequential order.
-    open fun rollPointer(param: Int = 0) : Int
+    open fun rollPointer(param: Int) : Int
     {
         rollingPointer++
         if(rollingPointer==param) {
             rollingPointer = -1
         }
-        return rollingPointer;
+        return rollingPointer
     }
 }
 
@@ -139,6 +140,17 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         return """Incorrect reactions: $falseReactions ${skipsStr}with avg time $avgFalseTime ms
 Correct reactions: $nonFalseReactions with avg time $avgNonFalseTime ms
 Final score $nonFalseReactions/$allReactions"""
+    }
+
+    // Implementation with random order, ensuring no two consecutive values are the same.
+    override fun rollPointer(param: Int) : Int
+    {
+        var newPtr = Random.nextInt(param)
+        if(rollingPointer == newPtr)
+            newPtr = -1
+
+        rollingPointer = newPtr
+        return rollingPointer
     }
 }
 class CombinationStrategy(promptRepository: PromptRepository,
