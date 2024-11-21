@@ -98,11 +98,6 @@ class ServerViewModel @Inject constructor(
         return rounds?.toInt() ?: 0
     }
 
-    fun getProgress():Float
-    {
-       return strategy!!.getProgress()
-    }
-
     init {
         startServer()
     }

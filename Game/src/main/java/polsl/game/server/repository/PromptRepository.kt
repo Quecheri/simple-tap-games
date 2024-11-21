@@ -1,7 +1,6 @@
 package polsl.game.server.repository
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 @Singleton
 class PromptRepository @Inject constructor(
@@ -36,11 +35,7 @@ class PromptRepository @Inject constructor(
     }
 
     fun getFastReactionPrompt(): Prompt {
-        val randInt = Random.nextInt(1000)
-        return if(randInt<800)
-            Prompt(SHOULD_CLICK, emptyList(),null)
-        else
-            Prompt(SHOULD_NOT_CLICK,emptyList(),null)
+        return frPrompt[frIdx++]
     }
     fun getCombinationPrompt(setup:Boolean): Prompt {
         return if(setup) Prompt(SHOULD_NOT_CLICK, emptyList(),null)

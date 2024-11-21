@@ -95,7 +95,6 @@ fun ClientScreen(
                                                         ImageQuestionContentView(
                                                             shouldReact = clientViewState.prompt?.prompt==SHOULD_CLICK,
                                                             ticks = ticks,
-                                                            progress = clientViewState.getProgress(),
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
                                                                 clientViewModel.sendAnswer(answerChosen)

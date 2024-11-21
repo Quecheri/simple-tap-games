@@ -3,8 +3,8 @@ package polsl.game.server.model
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
+import kotlin.random.Random
 
-//TODO zdjęcie bobra na środku ekranu + cały ekran klikalny
 //TODO opcjonalna liczba zapałek nad stosem zapałek
 //TODO bardziej widoczne przyciski pod zapałkami
 //TODO delay między kombinacjami
@@ -12,7 +12,6 @@ import polsl.game.server.repository.SHOULD_CLICK
 //TODO ekran z instrukcją i licencją
 //TODO ***usunięcie listy pytań z prompta
 //TODO usunięcie timera z kombinacji
-//TODO timer dla bobra taki sam jak dla NIM
 
 abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
 {
@@ -21,12 +20,17 @@ abstract class GameStrategy(protected val promptRepository: PromptRepository, pr
     abstract fun isGameOver(): Boolean
     abstract fun updateScore(result: Int)
     abstract fun getScore() : Int
-    abstract fun rollPointer(param: Int = 0) : Int
-    open fun getProgress():Float
-    {
-        return 0F
-    }
 
+    protected var rollingPointer: Int = -1
+    // Default implementation with sequential order.
+    open fun rollPointer(param: Int) : Int
+    {
+        rollingPointer++
+        if(rollingPointer==param) {
+            rollingPointer = -1
+        }
+        return rollingPointer
+    }
 }
 
 class NimStrategy(promptRepository: PromptRepository,
@@ -34,7 +38,6 @@ class NimStrategy(promptRepository: PromptRepository,
 ) : GameStrategy(promptRepository, uintParam)
 {
     private var haystack: Int = uintParam?.toInt() ?: 20
-    private var rollingPointer: Int = -1
     override fun getPrompt(): Prompt
     {
         return promptRepository.getNimPrompt(haystack)
@@ -55,14 +58,6 @@ class NimStrategy(promptRepository: PromptRepository,
     override fun getScore(): Int {
         return haystack
     }
-    override fun rollPointer(param: Int): Int
-    {
-        rollingPointer++
-        if(rollingPointer==param) {
-            rollingPointer = -1
-        }
-        return rollingPointer;
-    }
 }
 
 class FastReactionStrategy(promptRepository: PromptRepository,
@@ -73,7 +68,6 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     private var initialNumberOfPrompts :Int = uintParam?.toInt() ?: 20
     private var numberOfPrompts = initialNumberOfPrompts
     private var shouldClick = false
-    private var rollingPointer: Int = -1
     private var results = FastReactionResults(0,0,0,0,0)
 
     init {
@@ -128,19 +122,6 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         return numberOfPrompts
     }
 
-    override fun getProgress():Float
-    {
-        return 1 - numberOfPrompts.toFloat() / initialNumberOfPrompts
-    }
-    override fun rollPointer(param: Int): Int //TODO IMPLEMENT PROPERLY
-    {
-        rollingPointer++
-        if(rollingPointer==param) {
-            rollingPointer = -1
-        }
-        return rollingPointer;
-    }
-
     fun getResultSting():String
     {
         val falseReactions = results.incorrectReactions + results.skips
@@ -158,6 +139,17 @@ class FastReactionStrategy(promptRepository: PromptRepository,
 Poprawne reakcje: $nonFalseReactions z średnim czasem $avgNonFalseTime ms
 Wynik: $nonFalseReactions/$allReactions"""
     }
+
+    // Implementation with random order, ensuring no two consecutive values are the same.
+    override fun rollPointer(param: Int) : Int
+    {
+        var newPtr = Random.nextInt(param)
+        if(rollingPointer == newPtr)
+            newPtr = -1
+
+        rollingPointer = newPtr
+        return rollingPointer
+    }
 }
 class CombinationStrategy(promptRepository: PromptRepository,
                   uintParam: UInt?
@@ -167,9 +159,12 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private var currentCombinationLength: Int = 0
     private var combinationFailed = false
     private var setup = true
-    private var rollingPointer: Int = 0
     private var responseQueue: MutableList<Int> = mutableListOf()
     private var combination: MutableList<Int> = mutableListOf()
+
+    init {
+        rollingPointer = 0
+    }
 
     override fun getPrompt(): Prompt
     {

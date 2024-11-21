@@ -126,7 +126,6 @@ fun ServerScreen(
                                         ImageQuestionContentView(
                                             shouldReact = currentState.prompt.prompt==SHOULD_CLICK,
                                             ticks = ticks,
-                                            progress = serverViewModel.getProgress(),
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
