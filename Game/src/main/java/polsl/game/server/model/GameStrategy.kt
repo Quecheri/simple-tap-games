@@ -3,7 +3,6 @@ package polsl.game.server.model
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
-import kotlin.random.Random
 
 //TODO opcjonalna liczba zapałek nad stosem zapałek
 //TODO bardziej widoczne przyciski pod zapałkami
@@ -11,7 +10,6 @@ import kotlin.random.Random
 //TODO odświeżenie ekranu zaraz po strarcie gier
 //TODO ekran z instrukcją i licencją
 //TODO ***usunięcie listy pytań z prompta
-//TODO usunięcie timera z kombinacji
 
 abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
 {
@@ -30,6 +28,16 @@ abstract class GameStrategy(protected val promptRepository: PromptRepository, pr
             rollingPointer = -1
         }
         return rollingPointer
+    }
+    protected fun getRandomDistinctInt(excludedValue:Int?, maxIndex: Int): Int {
+        var value: Int
+        if(excludedValue==null) {
+            return (-1 until maxIndex).random()
+        }
+        do {
+            value = (-1 until maxIndex).random()
+        } while (value == excludedValue)
+        return value
     }
 }
 
@@ -140,14 +148,9 @@ Poprawne reakcje: $nonFalseReactions z średnim czasem $avgNonFalseTime ms
 Wynik: $nonFalseReactions/$allReactions"""
     }
 
-    // Implementation with random order, ensuring no two consecutive values are the same.
     override fun rollPointer(param: Int) : Int
     {
-        var newPtr = Random.nextInt(param)
-        if(rollingPointer == newPtr)
-            newPtr = -1
-
-        rollingPointer = newPtr
+        rollingPointer = getRandomDistinctInt(rollingPointer,param)
         return rollingPointer
     }
 }
@@ -204,17 +207,6 @@ class CombinationStrategy(promptRepository: PromptRepository,
             setup=false
         }
         return responseQueue[rollingPointer++]
-    }
-    private fun getRandomDistinctInt(excludedValue:Int?, maxIndex: Int): Int {
-        var value: Int
-        if(excludedValue==null) {
-            return (-1 until maxIndex).random()
-        }
-
-        do {
-            value = (-1 until maxIndex).random()
-        } while (value == excludedValue)
-        return value
     }
 
     private fun initializeCombinationList(maxIndex: Int) {
