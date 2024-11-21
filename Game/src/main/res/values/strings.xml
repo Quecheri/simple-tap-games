@@ -12,7 +12,7 @@
     <string name="connected">Połączono</string>
     <string name="disconnected">Rozłączono</string>
     <string name="unknown_error">Nieznany błąd</string>
-    <string name="ask_players_name">Wprowadź swoje nazwę</string>
+    <string name="ask_players_name">Wprowadź swoją nazwę</string>
     <string name="empty_name_error">Nazwa nie może być pusta</string>
     <string name="duplicate_name_error">Nazwa jest już zajęta</string>
     <string name="send_players_name">Wyślij</string>
@@ -32,7 +32,7 @@
     <string name="good">Dobrze</string>
     <string name="ok">Ok</string>
     <string name="bad">Źle</string>
-    <string name="reaction_time">Czas na reakcjie (sekundy)</string>
+    <string name="reaction_time">Czas na reakcje (sekundy)</string>
     <string name="round_number">Liczba rund</string>
     <string name="Nim_preview_result">Andrzej przegrał grę</string>
     <string name="combination_preview_timeout">Czas minął</string>
