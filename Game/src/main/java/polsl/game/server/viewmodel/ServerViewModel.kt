@@ -155,9 +155,7 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
-               viewModelScope.launch {
-                   rollingPointer = strategy!!.rollPointer(clients.value.size)
-               }
+               rollingPointer = strategy!!.rollPointer(clients.value.size)
                prompt = strategy!!.getPrompt()
                showQuestion(prompt)
            }else

@@ -34,13 +34,12 @@ fun BlinkContentView(
     onScreenClicked: () -> Unit
 ) {
     var shouldFlash by remember { mutableStateOf(false) }
-    var progress by remember { mutableStateOf(1f) }
     var shouldStart by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
     TimerEffect(
         duration = ticks,
-        shouldStart = shouldStart,
+        shouldStart = shouldStart && !startWithFlash,
         onTimeOut = {
             shouldStart = false
             onTimeout()
@@ -49,6 +48,7 @@ fun BlinkContentView(
     LaunchedEffect(startWithFlash) {
         if (startWithFlash) {
             coroutineScope.launch {
+                shouldStart = false
                 shouldFlash = true
                 delay(flashTimeout)
                 shouldFlash = false
@@ -57,19 +57,7 @@ fun BlinkContentView(
             }
         }
     }
-    LaunchedEffect(shouldStart) {
-        if (shouldStart) {
-            val tickInterval = 50L // Update progress every 50 ms
-            val totalTicks = ticks / tickInterval
-            var elapsedTicks = 0
 
-            while (elapsedTicks < totalTicks && shouldStart) {
-                delay(tickInterval)
-                elapsedTicks++
-                progress = 1f - (elapsedTicks.toFloat() / totalTicks)
-            }
-        }
-    }
 
     Box(
         modifier = modifier
@@ -77,11 +65,10 @@ fun BlinkContentView(
             .clickable {
                 if (shouldStart && clicable) {
                     shouldStart = false
-                    shouldFlash = true
                     coroutineScope.launch {
-                        delay(flashTimeout) // Flash duration
+                        shouldFlash = true
+                        delay(flashTimeout)
                         shouldFlash = false
-
                         onScreenClicked()
                     }
                 }
@@ -94,12 +81,6 @@ fun BlinkContentView(
                 .padding(1.dp),
             verticalArrangement = Arrangement.Top
         ) {
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-            )
             Text(
                 text = title,
                 fontSize = 20.sp,
