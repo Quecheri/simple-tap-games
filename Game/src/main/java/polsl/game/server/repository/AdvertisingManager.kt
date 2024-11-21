@@ -52,7 +52,7 @@ class AdvertisingManager @Inject constructor(
             .build()
 
         val scanResponse = AdvertiseData.Builder()
-            .setIncludeDeviceName(true)
+            .setIncludeDeviceName(false)
             .build()
 
         bluetoothLeAdvertiser.startAdvertising(
