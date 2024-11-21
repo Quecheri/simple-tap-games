@@ -68,7 +68,7 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     private var initialNumberOfPrompts :Int = uintParam?.toInt() ?: 20
     private var numberOfQuestions = initialNumberOfPrompts
     private var shouldClick = false
-    private var rollingPointer: Int = 0
+    private var rollingPointer: Int = -1
     private var results = FastReactionResults(0,0,0,0,0)
 
     init {
