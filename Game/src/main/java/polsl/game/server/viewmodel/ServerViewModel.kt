@@ -26,7 +26,6 @@ import polsl.game.server.model.CombinationStrategy
 import polsl.game.server.model.FastReactionStrategy
 import polsl.game.server.model.GameStrategy
 import polsl.game.server.model.NimStrategy
-import polsl.game.server.repository.SHOULD_NOT_CLICK
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,7 +63,7 @@ class ServerViewModel @Inject constructor(
                 //TODO aktualnie results jest uzywane tylko do przechowywania nicków
                 val loser = if(rollingPointer==-1) _serverState.value.result.last() else _serverState.value.result[rollingPointer]
                 val loserName = loser.name
-                result = "Player $loserName lost NIM"
+                result = "Gracz $loserName przegrał rozgrywkę"
             }
             GameType.FAST_REACTION -> {
                 result = (strategy as FastReactionStrategy).getResultSting()
@@ -118,15 +117,15 @@ class ServerViewModel @Inject constructor(
         this.gameType = gameType
         when (gameType) {
             GameType.NIM -> {
-                Log.d("StartGame", "Starting NIM game")
+                Log.d("StartGame", "Rozpoczynam Grę NIM")
                 strategy = NimStrategy(promptRepository, this.rounds)
             }
             GameType.FAST_REACTION -> {
-                Log.d("StartGame", "Starting Fast Reaction game")
+                Log.d("StartGame", "Rozpoczynam Grę Szybkość reakcji")
                 strategy = FastReactionStrategy(promptRepository,this.rounds)
             }
             GameType.COMBINATION -> {
-                Log.d("StartGame", "COMBINATION")
+                Log.d("StartGame", "Rozpoczynam Grę kombinacje")
                 strategy = CombinationStrategy(promptRepository,this.rounds)
                 rollingPointer = strategy!!.rollPointer(clients.value.size)
             }
@@ -161,7 +160,9 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
-               rollingPointer = strategy!!.rollPointer(clients.value.size)
+               viewModelScope.launch {
+                   rollingPointer = strategy!!.rollPointer(clients.value.size)
+               }
                prompt = strategy!!.getPrompt()
                showQuestion(prompt)
            }else
@@ -201,7 +202,7 @@ class ServerViewModel @Inject constructor(
             try {
                 advertiser.startAdvertising()
             } catch (exception: Exception) {
-                throw Exception("Could not start server.", exception)
+                throw Exception("Nie można uruchomić serwera.", exception)
             }
         }
         serverManager.setServerObserver(object : ServerObserver {
@@ -232,7 +233,7 @@ class ServerViewModel @Inject constructor(
                                                     state = WaitingForPlayers(clients.value.size)
                                                 )
                                             }
-                                            else -> Log.d(TAG, "${device.address} disconnected from the server.")
+                                            else -> Log.d(TAG, "${device.address} Rozłączono z serwerem.")
                                         }
                                     }
                                     else -> {}
@@ -267,7 +268,7 @@ class ServerViewModel @Inject constructor(
             }
 
             override fun onDeviceDisconnectedFromServer(device: BluetoothDevice) {
-                Log.w(TAG, "${device.address} disconnected from the server.")
+                Log.w(TAG, "${device.address} Rozłączono z serwerem.")
                 removePlayer(device)
             }
         })
@@ -428,9 +429,9 @@ enum class GameType(val value: Int) {
     }
     override fun toString(): String {
         return when (this) {
-            NIM -> "NIM"
-            FAST_REACTION -> "Fast reaction"
-            COMBINATION -> "Combination game"
+            NIM -> "Nim"
+            FAST_REACTION -> "Szybkość reakcji"
+            COMBINATION -> "Kombinacje"
         }
     }
 }

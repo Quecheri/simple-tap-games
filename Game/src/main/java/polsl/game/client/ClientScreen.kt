@@ -65,7 +65,7 @@ fun ClientScreen(
                         ConnectionState.Ready -> {
                             when (clientViewState.isGameOver) {
                                 true -> ResultView(
-                                    result = (clientViewState.resultStr ?: "Error while receving result")
+                                    result = (clientViewState.resultStr ?: stringResource(R.string.error_while_receving_result))
                                 )
                                 else -> {
 
@@ -159,13 +159,13 @@ fun ClientScreen(
                                                         {
 
                                                             Text(
-                                                                text = "Wait for your turn",
+                                                                text = stringResource(R.string.wait_title),
                                                                 modifier = Modifier.padding(16.dp)
                                                             )
                                                         }
                                                         else ->
                                                             Text(
-                                                                text = "Wait for your turn",
+                                                                text = stringResource(R.string.wait_title),
                                                                 modifier = Modifier.padding(16.dp)
                                                             )
                                                     }
@@ -173,7 +173,7 @@ fun ClientScreen(
                                                 else
                                                 {
                                                     Text(
-                                                        text = "Wait for your turn",
+                                                        text = stringResource(R.string.wait_title),
                                                         modifier = Modifier.padding(16.dp)
                                                     )
                                                 }

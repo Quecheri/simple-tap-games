@@ -12,11 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import polsl.game.server.data.ColorState
 import polsl.game.server.data.DisplayAnswer
 import no.nordicsemi.android.common.theme.NordicTheme
+import polsl.game.R
 
 /**
  * Shows questions and list of answers.
@@ -80,28 +82,28 @@ private fun StringQuestionContentView_Preview() {
     NordicTheme {
         StringQuestionContentView(
             question =
-            "How are you?",
+            stringResource(R.string.how_are_you),
             ticks = 4000,
             modifier = Modifier.fillMaxWidth(),
             onAnswerSelected = {},
             onTimeOut = {},
             answers = listOf(
-                DisplayAnswer(1, "Excellent",
+                DisplayAnswer(1, stringResource(R.string.excellent),
                     isSelected = false,
                     enableSelection = true,
                     color = ColorState.NOT_SELECTED_AND_TIMER_RUNNING
                 ),
-                DisplayAnswer(1, "Good",
+                DisplayAnswer(1, stringResource(R.string.good),
                     isSelected = true,
                     enableSelection = true,
                     color = ColorState.SELECTED_AND_TIMER_RUNNING
                 ),
-                DisplayAnswer(1, "Ok",
+                DisplayAnswer(1, stringResource(R.string.ok),
                     isSelected = false,
                     enableSelection = true,
                     color = ColorState.NOT_SELECTED_AND_TIMER_RUNNING
                 ),
-                DisplayAnswer(1, "Bad",
+                DisplayAnswer(1, stringResource(R.string.bad),
                     isSelected = false,
                     enableSelection = true,
                     color = ColorState.NOT_SELECTED_AND_TIMER_RUNNING

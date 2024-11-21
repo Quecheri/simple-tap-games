@@ -21,7 +21,7 @@ class AdvertisingManager @Inject constructor(
     val address: String? = bluetoothAdapter.address
     private val bluetoothLeAdvertiser: BluetoothLeAdvertiser by lazy {
         bluetoothAdapter.bluetoothLeAdvertiser
-            ?: throw NullPointerException("Bluetooth not initialized")
+            ?: throw NullPointerException("Bluetooth nie uruchomiony")
     }
     private var advertisingCallback: AdvertiseCallback? = null
 

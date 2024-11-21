@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.common.theme.NordicTheme
+import polsl.game.R
 
 /**
  * A Composable that reacts to screen clicks, handles timeout, flashes a specified color briefly, and shows a progress bar.
@@ -115,12 +117,12 @@ fun BlinkContentView(
 private fun BlinkContentView_Preview() {
     NordicTheme {
         BlinkContentView(
-            title = "Observe Combination",
+            title = stringResource(R.string.combination_preview_title),
             ticks = 3000,
             flashColor = Color.Yellow,
             startWithFlash = true,
-            onTimeout = { println("Timeout triggered") },
-            onScreenClicked = { println("Screen clicked") }
+            onTimeout = {},
+            onScreenClicked = {}
         )
     }
 }

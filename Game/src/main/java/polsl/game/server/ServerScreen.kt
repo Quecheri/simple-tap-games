@@ -138,7 +138,7 @@ fun ServerScreen(
                                     GameType.COMBINATION ->
                                         if (serverViewModel.getPromptString()==SHOULD_CLICK) {
                                             BlinkContentView(
-                                                title = "Recreate combination",
+                                                title = stringResource(R.string.combination_active_title),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 ticks = ticks,
                                                 flashColor = Color.Green,
@@ -156,7 +156,7 @@ fun ServerScreen(
                                         else {
 
                                                 BlinkContentView(
-                                                    title = "Observe combination",
+                                                    title = stringResource(R.string.combination_preview_title),
                                                     modifier = Modifier.fillMaxWidth(),
                                                     ticks = ticks,
                                                     clicable = false,
@@ -182,7 +182,7 @@ fun ServerScreen(
                                     if (serverViewModel.getPromptString() == SHOULD_CLICK)
                                     {
                                         BlinkContentView(
-                                            title = "Recreate combination",
+                                            title = stringResource(R.string.combination_active_title),
                                             modifier = Modifier.fillMaxWidth(),
                                             ticks = 99999,
                                             flashColor = Color.Red,
@@ -196,7 +196,7 @@ fun ServerScreen(
                                 else{
 
                                         BlinkContentView(
-                                            title = "Observe combination",
+                                            title = stringResource(R.string.combination_preview_title),
                                             modifier = Modifier.fillMaxWidth(),
                                             ticks = 99999,
                                             clicable = false,
@@ -223,7 +223,7 @@ fun ServerScreen(
                                 {
 
                                     Text(
-                                        text = "Wait for your turn",
+                                        text = stringResource(R.string.wait_title),
                                         modifier = Modifier.padding(16.dp)
                                     )
                                 }

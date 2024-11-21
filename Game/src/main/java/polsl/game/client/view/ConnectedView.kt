@@ -32,7 +32,7 @@ fun ConnectedView(players: List<Player>) {
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(id = R.string.user_joined))
+        Text(text = stringResource(id = R.string.players))
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(8.dp),

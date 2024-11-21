@@ -4,8 +4,6 @@ import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-//TODO zmiana na język polski
-//TODO dodanie wszytskich stringów do R.strings
 //TODO zdjęcie bobra na środku ekranu + cały ekran klikalny
 //TODO opcjonalna liczba zapałek nad stosem zapałek
 //TODO bardziej widoczne przyciski pod zapałkami
@@ -73,9 +71,9 @@ class FastReactionStrategy(promptRepository: PromptRepository,
 {
 
     private var initialNumberOfPrompts :Int = uintParam?.toInt() ?: 20
-    private var numberOfQuestions = initialNumberOfPrompts
+    private var numberOfPrompts = initialNumberOfPrompts
     private var shouldClick = false
-    private var rollingPointer: Int = 0
+    private var rollingPointer: Int = -1
     private var results = FastReactionResults(0,0,0,0,0)
 
     init {
@@ -89,15 +87,15 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     }
 
     override fun getGameStateString(): String {
-        return "Num of question left: $numberOfQuestions"
+        return "Liczba pozotałych rund: $numberOfPrompts"
     }
 
     override fun isGameOver(): Boolean {
-        return numberOfQuestions <= 0
+        return numberOfPrompts <= 0
     }
 
     override fun updateScore(result: Int) {
-        numberOfQuestions--
+        numberOfPrompts--
 
         if(result < 0)
         {
@@ -127,12 +125,12 @@ class FastReactionStrategy(promptRepository: PromptRepository,
     }
 
     override fun getScore(): Int {
-        return numberOfQuestions
+        return numberOfPrompts
     }
 
     override fun getProgress():Float
     {
-        return 1 - numberOfQuestions.toFloat() / initialNumberOfPrompts
+        return 1 - numberOfPrompts.toFloat() / initialNumberOfPrompts
     }
     override fun rollPointer(param: Int): Int //TODO IMPLEMENT PROPERLY
     {
@@ -156,9 +154,9 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         val skipsStr = if(results.skips > 0) "(including ${results.skips} $skipWord) " else " "
 
 
-        return """Incorrect reactions: $falseReactions ${skipsStr}with avg time $avgFalseTime ms
-Correct reactions: $nonFalseReactions with avg time $avgNonFalseTime ms
-Final score $nonFalseReactions/$allReactions"""
+        return """Niepoprawne reakcje $falseReactions ${skipsStr} z średnim czasem $avgFalseTime ms
+Poprawne reakcje: $nonFalseReactions z średnim czasem $avgNonFalseTime ms
+Wynik: $nonFalseReactions/$allReactions"""
     }
 }
 class CombinationStrategy(promptRepository: PromptRepository,
@@ -183,13 +181,13 @@ class CombinationStrategy(promptRepository: PromptRepository,
     }
     override fun getGameStateString(): String {
         return if(combinationFailed)
-        {"You have managed to properly recreate up to combination [$currentCombinationLength] out of [$maxCombinationLength]"}
+        {"Prawidłowo odtworzono [$currentCombinationLength] z [$maxCombinationLength] kombinacji"}
         else
-        {"You have completed all [$maxCombinationLength] combinations"}
+        {"Prawidłowo odtworzono wszystkie [$maxCombinationLength] kombinacji"}
     }
 
     override fun isGameOver(): Boolean {
-        return currentCombinationLength>=maxCombinationLength||combinationFailed
+        return currentCombinationLength>maxCombinationLength||combinationFailed
     }
 
     override fun updateScore(result: Int) {

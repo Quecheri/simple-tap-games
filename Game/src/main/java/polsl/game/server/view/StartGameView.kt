@@ -52,7 +52,7 @@ fun StartGameView(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.user_joined),
+                text = stringResource(id = R.string.players),
                 modifier = Modifier.padding(8.dp)
             )
 
@@ -96,7 +96,7 @@ fun StartGameView(
             TextField(
                 value = timeForReaction,
                 onValueChange = { timeForReaction = it },
-                label = { Text("Time for Reaction (seconds)") },
+                label = { Text(stringResource(R.string.reaction_time)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -106,7 +106,7 @@ fun StartGameView(
             TextField(
                 value = numberOfRounds,
                 onValueChange = { numberOfRounds = it },
-                label = { Text("Number of Rounds") },
+                label = { Text(stringResource(R.string.round_number)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )

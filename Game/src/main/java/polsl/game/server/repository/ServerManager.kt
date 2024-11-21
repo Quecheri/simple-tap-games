@@ -36,7 +36,7 @@ class ServerManager @Inject constructor(
                     BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                     BluetoothGattCharacteristic.PERMISSION_WRITE,
                     cccd(),
-                    description("A sample client server interaction.", false)
+                    description("Przykład architektury klient-serwer", false)
                 )
             )
         )

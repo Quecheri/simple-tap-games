@@ -10,7 +10,7 @@ class PromptRepository @Inject constructor(
     private var frIdx = 0
     fun getNimPrompt(haystack : Int): Prompt {
         val answers: List<Answer> = listOf(Answer("1",1),Answer("2",2),Answer("3",3))
-        return Prompt("How many sticks?",answers.take(haystack),null)
+        return Prompt("Ile zapałek weźmiesz?",answers.take(haystack),null)
     }
     fun initFastReactionPrompt(numOfPrompts : Int)
     {

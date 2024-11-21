@@ -42,12 +42,12 @@ fun DisconnectedView_Preview(){
 }
 
 private fun ConnectionState.Disconnected.Reason.name(): String = when (this) {
-    ConnectionState.Disconnected.Reason.TERMINATE_PEER_USER -> "Terminated by peer user"
-    ConnectionState.Disconnected.Reason.TERMINATE_LOCAL_HOST -> "Terminated by local host"
-    ConnectionState.Disconnected.Reason.CANCELLED -> "Cancelled"
-    ConnectionState.Disconnected.Reason.LINK_LOSS -> "Link loss"
-    ConnectionState.Disconnected.Reason.NOT_SUPPORTED -> "Not supported"
-    ConnectionState.Disconnected.Reason.TIMEOUT -> "Timeout"
-    ConnectionState.Disconnected.Reason.UNKNOWN -> "Unknown"
-    else -> "Unknown reason"
+    ConnectionState.Disconnected.Reason.TERMINATE_PEER_USER -> "Rozłączono przez klienta"
+    ConnectionState.Disconnected.Reason.TERMINATE_LOCAL_HOST -> "Rozłączono przez hosta"
+    ConnectionState.Disconnected.Reason.CANCELLED -> "Anulowano"
+    ConnectionState.Disconnected.Reason.LINK_LOSS -> "Połączenie utracone"
+    ConnectionState.Disconnected.Reason.NOT_SUPPORTED -> "Brak wsparcia"
+    ConnectionState.Disconnected.Reason.TIMEOUT -> "Przekroczono limit czasu oczekiwania na odpowiedź"
+    ConnectionState.Disconnected.Reason.UNKNOWN -> "Nieznany błąd"
+    else -> "Nieznany błąd"
 }

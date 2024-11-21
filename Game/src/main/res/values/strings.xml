@@ -1,34 +1,40 @@
 <resources>
     <string name="app_name">Harald "Bluetooth" Gormsson</string>
-
-    <string name="welcome_message">Welcome</string>
-    <string name="good_luck_player">Good Luck %s</string>
-
-    <string name="start_game_description">Please select one option</string>
-    <string name="start_game">Start Game</string>
-    <string name="join_game">Join Game</string>
-
-    <string name="looking_for_clients">Looking for clients…</string>
-    <string name="initializing">Waiting for server…</string>
-    <string name="connecting">Connecting…</string>
-    <string name="connected">Connected</string>
-    <string name="disconnected">Disconnected</string>
-    <string name="unknown_error">Unknown error</string>
-
-    <string name="ask_players_name">Enter player\'s name</string>
-    <string name="empty_name_error">Name cannot be empty</string>
-    <string name="duplicate_name_error">Name already taken</string>
-    <string name="send_players_name">Send</string>
-
-    <string name="user_joined">Joined players</string>
-    <string name="waiting_to_start_game">Waiting for server to start game</string>
-    <string name="select_game">Select game</string>
-
-    <string name="next">Next</string>
-
-    <string name="game_over">Game Over</string>
-    <string name="show_result">Show Result</string>
-    <string name="players">Players</string>
-    <string name="score">Score</string>
+    <string name="welcome_message">Witaj</string>
+    <string name="good_luck_player">Powodzenia %s</string>
+    <string name="start_game_description">Wybierz jedną z opcji</string>
+    <string name="start_game">Rozpocznij grę</string>
+    <string name="create_game">Stwórz grę</string>
+    <string name="join_game">Dołącz do gry</string>
+    <string name="looking_for_clients">Czekam na graczy…</string>
+    <string name="initializing">Czekam na serwer…</string>
+    <string name="connecting">Łączę…</string>
+    <string name="connected">Połączono</string>
+    <string name="disconnected">Rozłączono</string>
+    <string name="unknown_error">Nieznany błąd</string>
+    <string name="ask_players_name">Wprowadź swoje nazwę</string>
+    <string name="empty_name_error">Nazwa nie może być pusta</string>
+    <string name="duplicate_name_error">Nazwa jest już zajęta</string>
+    <string name="send_players_name">Wyślij</string>
+    <string name="waiting_to_start_game">Oczekiawnie na rozpoczęcie gry</string>
+    <string name="select_game">Wybierz grę</string>
+    <string name="next">Następny</string>
+    <string name="game_over">Gra zakończona</string>
+    <string name="show_result">Pokaż wyniki</string>
+    <string name="players">Gracze</string>
+    <string name="score">Wynik</string>
+    <string name="combination_active_title">Odtwórz kombinację</string>
+    <string name="combination_preview_title">Zapamiętaj kombinację</string>
+    <string name="wait_title">Poczekaj na swój ruch</string>
+    <string name="error_while_receving_result">Wystąpił błąd podczas wczytywania wyników</string>
+    <string name="how_are_you">Jak się masz?</string>
+    <string name="excellent">Świetnie</string>
+    <string name="good">Dobrze</string>
+    <string name="ok">Ok</string>
+    <string name="bad">Źle</string>
+    <string name="reaction_time">Czas na reakcjie (sekundy)</string>
+    <string name="round_number">Liczba rund</string>
+    <string name="Nim_preview_result">Andrzej przegrał grę</string>
+    <string name="combination_preview_timeout">Czas minął</string>
 
 </resources>

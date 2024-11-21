@@ -30,5 +30,5 @@ fun ErrorView(message: String?) {
 @Preview
 @Composable
 fun ErrorView_Preview() {
-    ErrorView("What a Terrible Failure!")
+    ErrorView(stringResource(id = R.string.unknown_error))
 }
