@@ -4,6 +4,18 @@ import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
+//TODO zmiana na język polski
+//TODO dodanie wszytskich stringów do R.strings
+//TODO zdjęcie bobra na środku ekranu + cały ekran klikalny
+//TODO opcjonalna liczba zapałek nad stosem zapałek
+//TODO bardziej widoczne przyciski pod zapałkami
+//TODO delay między kombinacjami
+//TODO odświeżenie ekranu zaraz po strarcie gier
+//TODO ekran z instrukcją i licencją
+//TODO ***usunięcie listy pytań z prompta
+//TODO usunięcie timera z kombinacji
+//TODO timer dla bobra taki sam jak dla NIM
+
 abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
 {
     abstract fun getPrompt(): Prompt
