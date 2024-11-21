@@ -51,15 +51,6 @@ data class ClientViewState(
     val openDialog: Boolean = nameResult?.isInvalid() ?: true
     val playersNameIsDuplicate: Boolean = isDuplicate && !isUserTyping && userRequestedPlayersNameDialog
     val playersNameIsError: Boolean = (isDuplicate || isEmptyName) && !isUserTyping
-
-    internal fun getProgress() :Float
-    {
-        if(gameParams?.numParam1 != null && haystack!=null)
-        {
-            return 1-haystack.toFloat()/ gameParams.numParam1!!
-        }
-        return 0F
-    }
 }
 
 fun ClientViewState.toViewState(): List<DisplayAnswer> {
