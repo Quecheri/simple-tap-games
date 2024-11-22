@@ -132,7 +132,7 @@ class ServerViewModel @Inject constructor(
                 prompt = strategy!!.getPrompt()
                 sendParams(gameType)
                 /** Send first Question */
-                showQuestion(prompt)
+                showQuestion(prompt,rollingPointer)
             }
         }
         else
@@ -157,7 +157,7 @@ class ServerViewModel @Inject constructor(
            {
                rollingPointer = strategy!!.rollPointer(clients.value.size)
                prompt = strategy!!.getPrompt()
-               showQuestion(prompt)
+               showQuestion(prompt, rollingPointer)
            }else
            {
                _serverState.value = _serverState.value.copy(isGameOver = true)
@@ -172,9 +172,9 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    private fun showQuestion(prompt: Prompt) {
+    private fun showQuestion(prompt: Prompt, target: Int) {
         viewModelScope.launch {
-            if (rollingPointer == -1) {
+            if (target == -1) {
                 _serverState.value = _serverState.value.copy(
                     state = Round(prompt),
                     ticks = Timer.TOTAL_TIME,
@@ -185,7 +185,7 @@ class ServerViewModel @Inject constructor(
             }
             else{
                 _serverState.value = _serverState.value.copy(state = WaitingForRound)
-                clients.value[rollingPointer].sendQuestion(prompt)
+                clients.value[target].sendQuestion(prompt)
             }
         }
     }
