@@ -162,6 +162,7 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private var currentCombinationLength: Int = 0
     private var combinationFailed = false
     private var setup = true
+    private var gameFinished = false
     private var responseQueue: MutableList<Int> = mutableListOf()
     private var combination: MutableList<Int> = mutableListOf()
 
@@ -185,7 +186,7 @@ class CombinationStrategy(promptRepository: PromptRepository,
     }
 
     override fun isGameOver(): Boolean {
-        return currentCombinationLength>maxCombinationLength||combinationFailed
+        return gameFinished||combinationFailed
     }
 
     override fun updateScore(result: Int) {
@@ -202,6 +203,10 @@ class CombinationStrategy(promptRepository: PromptRepository,
             initializeCombinationList(param)
             rollingPointer=0
         }
+        else if(currentCombinationLength == maxCombinationLength && rollingPointer==responseQueue.count()-1)
+        {
+            gameFinished = true
+        }
         else if(rollingPointer==responseQueue.count()/2)
         {
             setup=false
@@ -211,7 +216,6 @@ class CombinationStrategy(promptRepository: PromptRepository,
 
     private fun initializeCombinationList(maxIndex: Int) {
         currentCombinationLength++
-
         setup=true
         responseQueue.clear()
         if(currentCombinationLength==1)
