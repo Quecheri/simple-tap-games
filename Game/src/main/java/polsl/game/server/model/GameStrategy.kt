@@ -29,14 +29,13 @@ abstract class GameStrategy(protected val promptRepository: PromptRepository, pr
         }
         return rollingPointer
     }
-    protected fun getRandomDistinctInt(excludedValue:Int?, maxIndex: Int): Int {
-        var value: Int
-        if(excludedValue==null) {
+    protected fun getRandomDistinctPtr(currentRollingPointer:Int?, maxIndex: Int): Int {
+        if(currentRollingPointer==null) {
             return (-1 until maxIndex).random()
         }
-        do {
-            value = (-1 until maxIndex).random()
-        } while (value == excludedValue)
+        val value: Int = (0 until maxIndex).random()
+        if(value == currentRollingPointer)
+            return -1
         return value
     }
 }
@@ -143,14 +142,14 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         val skipsStr = if(results.skips > 0) "(including ${results.skips} $skipWord) " else " "
 
 
-        return """Niepoprawne reakcje $falseReactions ${skipsStr} z średnim czasem $avgFalseTime ms
+        return """Niepoprawne reakcje $falseReactions ${skipsStr}z średnim czasem $avgFalseTime ms
 Poprawne reakcje: $nonFalseReactions z średnim czasem $avgNonFalseTime ms
 Wynik: $nonFalseReactions/$allReactions"""
     }
 
     override fun rollPointer(param: Int) : Int
     {
-        rollingPointer = getRandomDistinctInt(rollingPointer,param)
+        rollingPointer = getRandomDistinctPtr(rollingPointer,param)
         return rollingPointer
     }
 }
@@ -224,7 +223,7 @@ class CombinationStrategy(promptRepository: PromptRepository,
         }
         else
         {
-            combination.add(getRandomDistinctInt(combination.last(), maxIndex))
+            combination.add(getRandomDistinctPtr(combination.last(), maxIndex))
         }
 
         responseQueue.addAll(combination)
