@@ -17,6 +17,7 @@ import no.nordicsemi.android.common.ui.view.NordicAppBar
 fun StartScreen(
     onServerNavigation: () -> Unit,
     onClientNavigation: () -> Unit,
+    onInfoNavigation: () -> Unit,
 ) {
     Column {
         NordicAppBar(
@@ -46,6 +47,16 @@ fun StartScreen(
                     onClick = onClientNavigation
                 ) {
                     Text(text = stringResource(id = R.string.join_game))
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Button(
+                    onClick = onInfoNavigation
+                ) {
+                    Text(text = stringResource(id = R.string.additional_info))
                 }
             }
         }
