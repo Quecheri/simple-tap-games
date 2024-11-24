@@ -92,7 +92,7 @@ fun ServerScreen(
                             StartGameView(
                                 isAllNameCollected = serverViewState.isAllNameCollected,
                                 joinedPlayer = serverViewState.userJoined,
-                                onStartGame = { game,timeout,rounds -> serverViewModel.startGame(game,timeout,rounds) }
+                                onStartGame = { game,timeout,rounds,showMatches -> serverViewModel.startGame(game,timeout,rounds,showMatches) }
                             )
                         }
                     }
@@ -111,8 +111,9 @@ fun ServerScreen(
                                             prompt = currentState.prompt.prompt,
                                             answers = serverViewState.toViewState(),
                                             ticks = ticks,
-                                            randomSeed = serverViewModel. getSeed(),
+                                            randomSeed = serverViewModel.getSeed(),
                                             numOfMatches = serverViewModel.getGameScore(),
+                                            showTextInfo = serverViewModel.getShowNumOfMatches(),
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
@@ -213,6 +214,7 @@ fun ServerScreen(
                                         ticks = 0,
                                         randomSeed = serverViewModel.getSeed(),
                                         numOfMatches = serverViewModel.getGameScore(),
+                                        showTextInfo = serverViewModel.getShowNumOfMatches(),
                                         modifier = Modifier.fillMaxWidth(),
                                         onAnswerSelected = {},
                                         onTimeOut = {},

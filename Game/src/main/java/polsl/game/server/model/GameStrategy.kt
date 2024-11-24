@@ -4,8 +4,6 @@ import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-//TODO opcjonalna liczba zapałek nad stosem zapałek
-//TODO bardziej widoczne przyciski pod zapałkami
 //TODO delay między kombinacjami
 //TODO odświeżenie ekranu zaraz po strarcie gier
 //TODO ekran z instrukcją i licencją

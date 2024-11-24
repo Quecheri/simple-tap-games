@@ -13,6 +13,7 @@ private val Start = defineDestination(StartDestination) {
     StartScreen(
         onServerNavigation = {viewModel.navigateTo(ServerDestination)},
         onClientNavigation =  {viewModel.navigateTo(ClientDestination)},
+        onInfoNavigation =  {viewModel.navigateTo(AdditionalInfoDestination)},
     )
 }
 val StartScreenDestination = Start

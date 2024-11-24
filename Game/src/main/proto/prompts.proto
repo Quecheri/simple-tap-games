@@ -64,4 +64,5 @@ message GameParamsProto{
     int32 gameType = 1;
     int32 timeout = 2;
     int32 numParam1 = 3;
+    int32 numParam2 = 4;
 }

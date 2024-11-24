@@ -4,6 +4,7 @@
     <string name="good_luck_player">Powodzenia %s</string>
     <string name="start_game_description">Wybierz jedną z opcji</string>
     <string name="start_game">Rozpocznij grę</string>
+    <string name="additional_info">Dodatkowe informacje</string>
     <string name="create_game">Stwórz grę</string>
     <string name="join_game">Dołącz do gry</string>
     <string name="looking_for_clients">Czekam na graczy…</string>
@@ -36,5 +37,7 @@
     <string name="round_number">Liczba rund</string>
     <string name="Nim_preview_result">Andrzej przegrał grę</string>
     <string name="combination_preview_timeout">Czas minął</string>
+    <string name="show_num_of_matches">Wyświetlaj liczbę zapałek w NIM</string>
+    <string name="num_of_matches">Liczba zapałek</string>
 
 </resources>
