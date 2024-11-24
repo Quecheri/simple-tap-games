@@ -82,7 +82,7 @@ fun ClientScreen(
                                                             ticks = ticks,
                                                             randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
                                                             numOfMatches = clientViewState.haystack!!,
-                                                            showTextInfo = true,//TODO()
+                                                            showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
                                                                 clientViewModel.sendAnswer(answerChosen)
@@ -150,7 +150,7 @@ fun ClientScreen(
                                                                 ticks = 0,
                                                                 randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
                                                                 numOfMatches = clientViewState.haystack!!,
-                                                                showTextInfo = true,//TODO()
+                                                                showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
                                                                 modifier = Modifier.fillMaxWidth(),
                                                                 onAnswerSelected = {},
                                                                 onTimeOut = {},

@@ -55,7 +55,7 @@ fun NimContentView(
             duration = if(prompt!=null)ticks else 0,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             onTimeOut = { if(prompt!=null)onTimeOut(1)},
         )
         if(showTextInfo)
@@ -112,7 +112,7 @@ fun NimContentView(
                 ) {
                     Text(
                         text = answer.text,
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(8.dp),
                         fontSize = 40.sp
                     )
                 }

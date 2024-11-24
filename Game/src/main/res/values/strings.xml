@@ -36,5 +36,7 @@
     <string name="round_number">Liczba rund</string>
     <string name="Nim_preview_result">Andrzej przegrał grę</string>
     <string name="combination_preview_timeout">Czas minął</string>
+    <string name="show_num_of_matches">Wyświetlaj liczbę zapałek w NIM</string>
+    <string name="num_of_matches">Liczba zapałek</string>
 
 </resources>

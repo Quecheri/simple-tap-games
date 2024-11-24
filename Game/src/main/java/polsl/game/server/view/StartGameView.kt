@@ -2,18 +2,16 @@ package polsl.game.server.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -38,7 +36,7 @@ import polsl.game.server.viewmodel.GameType
 fun StartGameView(
     isAllNameCollected: Boolean,
     joinedPlayer: List<Player>,
-    onStartGame: (GameType, String, String) -> Unit
+    onStartGame: (GameType, String, String, Boolean) -> Unit
 ) {
     OutlinedCard(
         modifier = Modifier
@@ -71,6 +69,9 @@ fun StartGameView(
             var selectedGame by remember { mutableStateOf(GameType.NIM) }
             var timeForReaction by remember { mutableStateOf("") }
             var numberOfRounds by remember { mutableStateOf("") }
+
+            var showNumOfMatches by remember { mutableStateOf(false) }
+            val isNIM = selectedGame == GameType.NIM
 
             GameType.entries.forEach { game ->
                 Row(
@@ -106,17 +107,29 @@ fun StartGameView(
             TextField(
                 value = numberOfRounds,
                 onValueChange = { numberOfRounds = it },
-                label = { Text(stringResource(R.string.round_number)) },
+                label = { Text(stringResource(if(isNIM)R.string.num_of_matches else R.string.round_number)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
-
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = showNumOfMatches,
+                    onCheckedChange = { if (isNIM) showNumOfMatches = it },
+                    enabled = isNIM
+                )
+                Text(
+                    text = stringResource(R.string.show_num_of_matches),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
-                onClick = { onStartGame(selectedGame, timeForReaction, numberOfRounds) },
+                onClick = { onStartGame(selectedGame, timeForReaction, numberOfRounds, showNumOfMatches) },
                 enabled = isAllNameCollected,
             ) {
                 Text(text = stringResource(id = R.string.start_game))
@@ -136,6 +149,6 @@ fun StartGameView_Preview() {
                 Player("User 1"),
                 Player("User 2")
             )
-        ) { game,timeout,rounds-> }
+        ) { game,timeout,rounds, showNumOfMatches-> }
     }
 }

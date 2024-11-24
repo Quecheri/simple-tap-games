@@ -49,6 +49,7 @@ class ServerViewModel @Inject constructor(
     private var gameType: GameType?=null
     private var timeout: UInt?=null
     private var rounds: UInt?=null
+    private var showMatches: Boolean=false
 
     internal fun getGameType():GameType
     {
@@ -98,17 +99,25 @@ class ServerViewModel @Inject constructor(
         return rounds?.toInt() ?: 0
     }
 
+    fun getShowNumOfMatches():Boolean
+    {
+        return showMatches
+    }
+
     init {
         startServer()
     }
 
 
-    fun startGame(gameType: GameType, timeout : String, rounds : String) {
+    fun startGame(gameType: GameType, timeout : String, rounds : String, showMatches: Boolean) {
+        stopAdvertising()
+
         this.timeout = timeout.toUIntOrNull()
         if(this.timeout!=null)
             this.timeout = this.timeout!!*1000U
         this.rounds = rounds.toUIntOrNull()
-        stopAdvertising()
+        this.showMatches = showMatches
+
         this.gameType = gameType
         when (gameType) {
             GameType.NIM -> {
@@ -150,7 +159,7 @@ class ServerViewModel @Inject constructor(
             rounds = strategy!!.getScore().toUInt()
 
         clients.value.forEach {
-            it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore()));
+            it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore(),if(showMatches)1 else 0));
         }
     }
 
