@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +29,13 @@ fun ImageQuestionContentView(
     onAnswerSelected: (Int) -> Unit,
     onTimeOut: (Int) -> Unit,
 ) {
+    var shouldStart by remember { mutableStateOf(true) }
+
+    TimerEffect(
+        duration = ticks,
+        shouldStart = shouldStart,
+        onTimeOut = { onTimeOut(-1) }
+    )
     val startTime = remember { System.currentTimeMillis() }
     TimerView(
         key = shouldReact,
@@ -33,7 +43,7 @@ fun ImageQuestionContentView(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        onTimeOut = { onTimeOut(-1) },
+        onTimeOut = {  },
     )
     Box(
         modifier = Modifier
@@ -41,6 +51,7 @@ fun ImageQuestionContentView(
             .clickable {
                 val endTime = System.currentTimeMillis()
                 val reactionTime = endTime - startTime
+                shouldStart = false
                 onAnswerSelected(reactionTime.toInt())
             }
     ) {
