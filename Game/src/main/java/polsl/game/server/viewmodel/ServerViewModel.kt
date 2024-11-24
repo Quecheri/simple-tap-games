@@ -146,6 +146,9 @@ class ServerViewModel @Inject constructor(
         val timeout = this.timeout?.toInt() ?: 2000
         Timer.TOTAL_TIME = timeout.toLong()
 
+        if(rounds==null)
+            rounds = strategy!!.getScore().toUInt()
+
         clients.value.forEach {
             it.sendGameParams(GameParams(gameType, timeout, strategy!!.getScore()));
         }

@@ -111,8 +111,9 @@ fun ServerScreen(
                                             prompt = currentState.prompt.prompt,
                                             answers = serverViewState.toViewState(),
                                             ticks = ticks,
-                                            randomSeed = serverViewModel. getSeed(),
+                                            randomSeed = serverViewModel.getSeed(),
                                             numOfMatches = serverViewModel.getGameScore(),
+                                            showTextInfo = true,//TODO()
                                             modifier = Modifier.fillMaxWidth(),
                                             onAnswerSelected = { answerChosen ->
                                                 serverViewModel.selectedAnswerServer(answerChosen)
@@ -213,6 +214,7 @@ fun ServerScreen(
                                         ticks = 0,
                                         randomSeed = serverViewModel.getSeed(),
                                         numOfMatches = serverViewModel.getGameScore(),
+                                        showTextInfo = true,//TODO()
                                         modifier = Modifier.fillMaxWidth(),
                                         onAnswerSelected = {},
                                         onTimeOut = {},
