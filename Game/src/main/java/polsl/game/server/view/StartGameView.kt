@@ -72,6 +72,7 @@ fun StartGameView(
 
             var showNumOfMatches by remember { mutableStateOf(false) }
             val isNIM = selectedGame == GameType.NIM
+            val isCombination = selectedGame == GameType.COMBINATION
 
             GameType.entries.forEach { game ->
                 Row(
@@ -94,13 +95,17 @@ fun StartGameView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
-                value = timeForReaction,
-                onValueChange = { timeForReaction = it },
-                label = { Text(stringResource(R.string.reaction_time)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
+            if(!isCombination)
+            {
+                TextField(
+                    value = timeForReaction,
+                    onValueChange = { timeForReaction = it },
+                    label = { Text(stringResource(R.string.reaction_time)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -114,15 +119,18 @@ fun StartGameView(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Checkbox(
-                    checked = showNumOfMatches,
-                    onCheckedChange = { if (isNIM) showNumOfMatches = it },
-                    enabled = isNIM
-                )
-                Text(
-                    text = stringResource(R.string.show_num_of_matches),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                if(isNIM)
+                {
+                    Checkbox(
+                        checked = showNumOfMatches,
+                        onCheckedChange = { showNumOfMatches = it },
+                        )
+                    Text(
+                        text = stringResource(R.string.show_num_of_matches),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+
             }
             Spacer(modifier = Modifier.height(16.dp))
 
