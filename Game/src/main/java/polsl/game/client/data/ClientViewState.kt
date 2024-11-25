@@ -15,7 +15,7 @@ import polsl.game.server.data.NameResult
  * @property correctAnswerId    correct answer id.
  * @property selectedAnswerId   selected answer id.
  * @property ticks              timer duration.
- * @property prompt           question sent from the server.
+ * @property prompt             prompt sent from the server.
  * @property userJoined         a list of all joined players.
  * @property isGameOver         returns true when game is over.
  * @property result             a list of players and their scores.
@@ -37,10 +37,9 @@ data class ClientViewState(
     val error: String? = null,
     val isUserTyping: Boolean = false,
     val userRequestedPlayersNameDialog: Boolean = true,
-    val haystack: Int? = null,
+    val score: Int? = null,
     val resultStr: String? = null,
     val gameParams: GameParams? = null,
-    val blinkQueue: Int? = null,
 ) {
     val isTimerRunning: Boolean = ticks?.let { it > 0 } == true
 
@@ -54,7 +53,7 @@ data class ClientViewState(
 }
 
 fun ClientViewState.toViewState(): List<DisplayAnswer> {
-    return prompt?.let { question ->
-        question.answers.map { it.toViewState(selectedAnswerId, correctAnswerId, isTimerRunning) }
+    return prompt?.let { prompt ->
+        prompt.answers.map { it.toViewState(selectedAnswerId, correctAnswerId, isTimerRunning) }
     } ?: emptyList()
 }

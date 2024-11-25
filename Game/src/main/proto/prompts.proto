@@ -3,7 +3,7 @@ syntax = "proto3";
 package polsl.game.proto;
 
 enum OpCodeProto {
-  NEW_QUESTION = 0;
+  NEW_PROMPT   = 0;
   RESPONSE     = 1;
   RESULT       = 2;
   NAME         = 3;
@@ -11,7 +11,7 @@ enum OpCodeProto {
   PLAYERS      = 5;
   ERROR        = 6;
   YOUR_TURN    = 7;
-  HAYSTACK     = 8;
+  SCORE        = 8;
   RESULT_STR   = 9;
   GAME_PARAMS = 10;
 }
@@ -28,7 +28,7 @@ message RequestProto {
   bool isEmptyName        = 9;
   bool isDuplicateName    = 10;
   bool isYourTurn         = 11;
-  int32 haystackValue     = 12;
+  int32 scoreValue        = 12;
   string resultStr        = 13;
   GameParamsProto gameParams = 14;
 }

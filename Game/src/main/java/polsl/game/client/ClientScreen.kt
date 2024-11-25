@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import polsl.game.R
 import polsl.game.client.viewmodel.ClientViewModel
 import polsl.game.server.view.PlayersNameDialog
-import polsl.game.server.view.StringQuestionContentView
 import polsl.game.client.data.toViewState
 import polsl.game.client.view.*
 import polsl.game.server.view.ResultView
@@ -25,7 +24,7 @@ import no.nordicsemi.android.common.permissions.ble.RequireLocation
 import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
 import polsl.game.server.view.BlinkContentView
-import polsl.game.server.view.ImageQuestionContentView
+import polsl.game.server.view.ImageContentView
 import polsl.game.server.view.NimContentView
 import polsl.game.server.viewmodel.GameType
 
@@ -80,7 +79,7 @@ fun ClientScreen(
                                                             answers = clientViewState.toViewState(),
                                                             ticks = ticks,
                                                             randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
-                                                            numOfMatches = clientViewState.haystack!!,
+                                                            numOfMatches = clientViewState.score!!,
                                                             showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
                                                             modifier = Modifier.fillMaxWidth(),
                                                             onAnswerSelected = { answerChosen ->
@@ -92,7 +91,7 @@ fun ClientScreen(
                                                     }
                                                     GameType.FAST_REACTION ->
                                                     {
-                                                        ImageQuestionContentView(
+                                                        ImageContentView(
                                                             shouldReact = clientViewState.prompt?.prompt==SHOULD_CLICK,
                                                             ticks = ticks,
                                                             modifier = Modifier.fillMaxWidth(),
@@ -145,7 +144,7 @@ fun ClientScreen(
                                                                 answers = emptyList(),
                                                                 ticks = 0,
                                                                 randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
-                                                                numOfMatches = clientViewState.haystack!!,
+                                                                numOfMatches = clientViewState.score!!,
                                                                 showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
                                                                 modifier = Modifier.fillMaxWidth(),
                                                                 onAnswerSelected = {},
@@ -198,7 +197,7 @@ fun ClientScreen(
                                                         answers = emptyList(),
                                                         ticks = 0,
                                                         randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
-                                                        numOfMatches = clientViewState.haystack?:clientViewState.gameParams!!.numParam1?: 0,
+                                                        numOfMatches = clientViewState.score?:clientViewState.gameParams!!.numParam1?: 0,
                                                         showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
                                                         modifier = Modifier.fillMaxWidth(),
                                                         onAnswerSelected = {},

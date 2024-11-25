@@ -140,8 +140,8 @@ class ServerViewModel @Inject constructor(
             viewModelScope.launch {
                 prompt = strategy!!.getPrompt()
                 sendParams(gameType)
-                /** Send first Question */
-                showQuestion(prompt,rollingPointer)
+                /** Send first Prompt */
+                showPrompt(prompt,rollingPointer)
             }
         }
         else
@@ -163,13 +163,13 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    fun showNextQuestion() {
+    fun showNestPrompt() {
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
                rollingPointer = strategy!!.rollPointer(clients.value.size)
                prompt = strategy!!.getPrompt()
-               showQuestion(prompt, rollingPointer)
+               showPrompt(prompt, rollingPointer)
            }else
            {
                _serverState.value = _serverState.value.copy(isGameOver = true)
@@ -184,7 +184,7 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun  showQuestion(prompt: Prompt, target: Int) {
+    private suspend fun  showPrompt(prompt: Prompt, target: Int) {
          if (target == -1) {
              if(getGameType()==GameType.COMBINATION)
              {
@@ -200,7 +200,7 @@ class ServerViewModel @Inject constructor(
              startCountDown()
          }
          else{
-             clients.value[target].sendQuestion(prompt)
+             clients.value[target].sendPrompt(prompt)
              if(getGameType()==GameType.COMBINATION)
              {
                  //Needed to properly render animations in combination game mode
@@ -266,7 +266,7 @@ class ServerViewModel @Inject constructor(
                     .apply {
                         clientAnswer
                             .onEach { saveScore(it, device.address)
-                                showNextQuestion()}
+                                showNestPrompt()}
                             .launchIn(viewModelScope)
                     }
                     .apply {
@@ -397,7 +397,7 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
             _serverState.value = _serverState.value.copy(selectedAnswerId = selectedAnswer)
             advertiser.address?.let { saveScore(selectedAnswer, it) }
-            showNextQuestion()
+            showNestPrompt()
         }
 
     }
@@ -412,7 +412,7 @@ class ServerViewModel @Inject constructor(
         _serverState.value.result.find { it.name == mapName(deviceAddress) }
             ?.let { it.score += result }
             clients.value.onEach { client ->
-                client.sendHaystack(strategy!!.getScore())
+                client.sendScore(strategy!!.getScore())
             }
         }
     }

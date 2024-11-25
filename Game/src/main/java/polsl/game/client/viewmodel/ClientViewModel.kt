@@ -51,7 +51,7 @@ class ClientViewModel @Inject constructor(
                     userJoined
                         .onEach { _clientState.value = _clientState.value.copy(userJoined = it) }
                         .launchIn(viewModelScope)
-                    question
+                    prompt
                         .onEach {
                             _clientState.value = _clientState.value.copy(
                                 selectedAnswerId = null,
@@ -78,8 +78,8 @@ class ClientViewModel @Inject constructor(
                     result
                         .onEach { _clientState.value = _clientState.value.copy(result = it) }
                         .launchIn(viewModelScope)
-                    haystack
-                        .onEach { _clientState.value = _clientState.value.copy(haystack = it) }
+                    score
+                        .onEach { _clientState.value = _clientState.value.copy(score = it) }
                         .launchIn(viewModelScope)
                     resultStr
                         .onEach { _clientState.value = _clientState.value.copy(resultStr = it) }

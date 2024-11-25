@@ -9,7 +9,7 @@ import no.nordicsemi.android.ble.response.ReadResponse
 /**
  * This class decodes the received packet using Protobuf.
  */
-class QuestionResponse : ReadResponse() {
+class PromptResponse : ReadResponse() {
     var name: String? = null
     var selectedAnswerId: Int? = null
 

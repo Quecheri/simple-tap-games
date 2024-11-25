@@ -19,7 +19,7 @@ import polsl.game.server.data.Players
 import polsl.game.spec.DeviceSpecifications
 import polsl.game.spec.PacketMerger
 import polsl.game.spec.PacketSplitter
-import polsl.game.server.data.QuestionResponse
+import polsl.game.server.data.PromptResponse
 import polsl.game.server.data.toProto
 import no.nordicsemi.android.ble.ktx.asResponseFlow
 import no.nordicsemi.android.ble.ktx.suspend
@@ -35,8 +35,8 @@ class ServerConnection(
 
     private val _playersName = MutableSharedFlow<String>()
     val playersName = _playersName.asSharedFlow()
-    private val _haystack = MutableSharedFlow<String>()
-    val haystack = _haystack.asSharedFlow()
+    private val _score = MutableSharedFlow<String>()
+    val score = _score.asSharedFlow()
     private val _clientAnswer = MutableSharedFlow<Int>()
     val clientAnswer = _clientAnswer.asSharedFlow()
 
@@ -63,7 +63,7 @@ class ServerConnection(
             setWriteCallback(serverCharacteristic)
                 // Merges packets until the entire text is present in the stream [PacketMerger.merge].
                 .merge(PacketMerger())
-                .asResponseFlow<QuestionResponse>()
+                .asResponseFlow<PromptResponse>()
                 .onEach {
                     it.name?.let { name ->  _playersName.emit(name)}
                     it.selectedAnswerId?.let { result ->  _clientAnswer.emit(result) }
@@ -115,8 +115,8 @@ class ServerConnection(
             .suspend()
     }
 
-    suspend fun sendHaystack(haystack: Int) {
-        val request = RequestProto(OpCodeProto.HAYSTACK, haystackValue = haystack)
+    suspend fun sendScore(score: Int) {
+        val request = RequestProto(OpCodeProto.SCORE, scoreValue = score)
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
             .split(PacketSplitter())
@@ -127,8 +127,8 @@ class ServerConnection(
      * Send question. The data is split into MTU size
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */
-    suspend fun sendQuestion(prompt: Prompt) {
-        val request = RequestProto(OpCodeProto.NEW_QUESTION, prompt = prompt.toProto())
+    suspend fun sendPrompt(prompt: Prompt) {
+        val request = RequestProto(OpCodeProto.NEW_PROMPT, prompt = prompt.toProto())
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
             .split(PacketSplitter())

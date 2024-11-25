@@ -40,26 +40,26 @@ class NimStrategy(promptRepository: PromptRepository,
                   uintParam: UInt?
 ) : GameStrategy(promptRepository, uintParam)
 {
-    private var haystack: Int = uintParam?.toInt() ?: 20
+    private var score: Int = uintParam?.toInt() ?: 20
     override fun getPrompt(): Prompt
     {
-        return promptRepository.getNimPrompt(haystack)
+        return promptRepository.getNimPrompt(score)
     }
 
     override fun getGameStateString(): String {
-        return "Haystack: $haystack"
+        return "Wynik: $score"
     }
 
     override fun isGameOver(): Boolean {
-        return haystack<=0
+        return score<=0
     }
 
     override fun updateScore(result: Int) {
-        haystack -= result
+        score -= result
     }
 
     override fun getScore(): Int {
-        return haystack
+        return score
     }
 }
 

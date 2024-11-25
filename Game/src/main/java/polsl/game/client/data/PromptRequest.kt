@@ -25,7 +25,7 @@ class Request : ReadResponse() {
     var isGameOver: Boolean? = null
     var result: Results? = null
     var nameResult: NameResult? = null
-    var haystack: Int? = null
+    var score: Int? = null
     var resultStr: String? = null
     var gameParams: GameParams? = null
 
@@ -34,11 +34,11 @@ class Request : ReadResponse() {
         val request = RequestProto.ADAPTER.decode(bytes)
         when (request.opCode) {
             OpCodeProto.PLAYERS -> { userJoined = request.players?.toPlayers() }
-            OpCodeProto.NEW_QUESTION -> { prompt = request.prompt?.toPrompt() }
+            OpCodeProto.NEW_PROMPT -> { prompt = request.prompt?.toPrompt() }
             OpCodeProto.RESPONSE -> { answerId = request.answerId }
             OpCodeProto.GAME_OVER -> { isGameOver = request.isGameOver }
             OpCodeProto.RESULT -> { result = request.results?.toResults() }
-            OpCodeProto.HAYSTACK -> { haystack = request.haystackValue }
+            OpCodeProto.SCORE -> { score = request.scoreValue }
             OpCodeProto.ERROR -> { nameResult = NameResult(
                 isEmptyName = request.isEmptyName,
                 isDuplicateName = request.isDuplicateName,

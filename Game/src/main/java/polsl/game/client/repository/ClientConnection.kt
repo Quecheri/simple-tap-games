@@ -37,11 +37,11 @@ class ClientConnection(
     private val _userJoined = MutableSharedFlow<Players>()
     val userJoined = _userJoined.asSharedFlow()
     private val _prompt = MutableSharedFlow<Prompt>()
-    val question = _prompt.asSharedFlow()
+    val prompt = _prompt.asSharedFlow()
     private val _answer = MutableSharedFlow<Int>()
     val answer = _answer.asSharedFlow()
-    private val _haystack = MutableSharedFlow<Int>()
-    val haystack = _haystack.asSharedFlow()
+    private val _score = MutableSharedFlow<Int>()
+    val score = _score.asSharedFlow()
     private val _isGameOver = MutableSharedFlow<Boolean>()
     val isGameOver = _isGameOver.asSharedFlow()
     private val _result = MutableSharedFlow<Results>()
@@ -83,11 +83,11 @@ class ClientConnection(
                 .onEach {
                     it.nameResult?.let { error -> _nameResult.emit(error) }
                     it.userJoined?.let { userJoined -> _userJoined.emit(userJoined) }
-                    it.prompt?.let { question -> _prompt.emit(question) }
+                    it.prompt?.let { prompt -> _prompt.emit(prompt) }
                     it.answerId?.let { answer -> _answer.emit(answer) }
                     it.isGameOver?.let { isGameOver -> _isGameOver.emit(isGameOver) }
                     it.result?.let { results -> _result.emit(results) }
-                    it.haystack?.let { haystack -> _haystack.emit(haystack) }
+                    it.score?.let { haystack -> _score.emit(haystack) }
                     it.resultStr?.let { resultStr -> _resultStr.emit(resultStr) }
                     it.gameParams?.let { gameParams -> _gameParams.emit(gameParams) }
                 }

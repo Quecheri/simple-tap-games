@@ -22,7 +22,7 @@ import no.nordicsemi.android.common.theme.NordicTheme
 import polsl.game.R
 
 @Composable
-fun ImageQuestionContentView(
+fun ImageContentView(
     shouldReact: Boolean,
     ticks: Long,
     modifier: Modifier = Modifier,
@@ -72,9 +72,9 @@ fun ImageQuestionContentView(
 
 @Preview
 @Composable
-private fun ImageQuestionContentView_Preview() {
+private fun ImageContentView_Preview() {
     NordicTheme {
-        ImageQuestionContentView(
+        ImageContentView(
             shouldReact =false,
             ticks = 4000,
             modifier = Modifier.fillMaxWidth(),
