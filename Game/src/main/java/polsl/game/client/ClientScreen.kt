@@ -68,7 +68,6 @@ fun ClientScreen(
                                     result = (clientViewState.resultStr ?: stringResource(R.string.error_while_receving_result))
                                 )
                                 else -> {
-
                                         clientViewState.prompt?.let {
                                             if(clientViewState.isYourTurn)
                                             {
@@ -156,16 +155,7 @@ fun ClientScreen(
                                                         GameType.FAST_REACTION ->
                                                         {
 
-                                                            Text(
-                                                                text = stringResource(R.string.wait_title),
-                                                                modifier = Modifier.padding(16.dp)
-                                                            )
                                                         }
-                                                        else ->
-                                                            Text(
-                                                                text = stringResource(R.string.wait_title),
-                                                                modifier = Modifier.padding(16.dp)
-                                                            )
                                                     }
                                                 }
                                                 else
@@ -178,24 +168,49 @@ fun ClientScreen(
 
                                             }
                                         } ?: run {
-                                            if (clientViewState.openDialog) {
-                                                PlayersNameDialog(
-                                                    playersName = playersName,
-                                                    isDuplicate = clientViewState.playersNameIsDuplicate,
-                                                    isError = clientViewState.playersNameIsError,
-                                                    onDismiss = {
-                                                        clientViewModel.dismissPlayersNameDialog()
-                                                    },
-                                                    onNameSet = {
-                                                        playersName = it
-                                                        clientViewModel.onUserTyping()
-                                                    },
-                                                    onSendClick = {
-                                                        playersName = playersName.trim()
-                                                        clientViewModel.sendName(playersName)
-                                                    }
-                                                )
-                                            } else clientViewState.userJoined?.let { ConnectedView(it.player) }
+                                            if(clientViewState.gameParams==null)
+                                            {
+                                                if (clientViewState.openDialog) {
+                                                    PlayersNameDialog(
+                                                        playersName = playersName,
+                                                        isDuplicate = clientViewState.playersNameIsDuplicate,
+                                                        isError = clientViewState.playersNameIsError,
+                                                        onDismiss = {
+                                                            clientViewModel.dismissPlayersNameDialog()
+                                                        },
+                                                        onNameSet = {
+                                                            playersName = it
+                                                            clientViewModel.onUserTyping()
+                                                        },
+                                                        onSendClick = {
+                                                            playersName = playersName.trim()
+                                                            clientViewModel.sendName(playersName)
+                                                        }
+                                                    )
+                                                } else clientViewState.userJoined?.let { ConnectedView(it.player) }
+                                            }
+                                            else
+                                            {
+                                               if(clientViewState.gameParams!!.gameType == GameType.NIM)
+                                                {
+                                                    NimContentView(
+                                                        prompt = null,
+                                                        answers = emptyList(),
+                                                        ticks = 0,
+                                                        randomSeed = clientViewState.gameParams!!.numParam1!!.toInt(),
+                                                        numOfMatches = clientViewState.haystack?:clientViewState.gameParams!!.numParam1?: 0,
+                                                        showTextInfo = clientViewState.gameParams!!.numParam2!! != 0,
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        onAnswerSelected = {},
+                                                        onTimeOut = {},
+                                                    )
+                                                }
+                                                else
+                                               {
+                                               //Blank screens
+                                               }
+                                            }
+
                                         }
                                 }
                             }

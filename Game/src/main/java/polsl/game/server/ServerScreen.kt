@@ -217,10 +217,6 @@ fun ServerScreen(
                                 GameType.FAST_REACTION ->
                                 {
 
-                                    Text(
-                                        text = stringResource(R.string.wait_title),
-                                        modifier = Modifier.padding(16.dp)
-                                    )
                                 }
                             }
 

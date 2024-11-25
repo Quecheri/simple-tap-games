@@ -4,7 +4,6 @@ import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-//TODO odświeżenie ekranu zaraz po strarcie gier
 //TODO ekran z instrukcją i licencją
 //TODO ***usunięcie listy pytań z prompta
 
