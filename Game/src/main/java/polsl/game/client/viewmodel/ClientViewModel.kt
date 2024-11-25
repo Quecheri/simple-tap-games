@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -16,6 +17,7 @@ import no.nordicsemi.android.ble.ktx.stateAsFlow
 import polsl.game.client.data.ClientViewState
 import polsl.game.client.repository.ClientConnection
 import polsl.game.client.repository.ScannerRepository
+import polsl.game.server.viewmodel.GameType
 import polsl.game.server.viewmodel.Timer
 import polsl.game.server.viewmodel.TimerViewModel
 import javax.inject.Inject
@@ -101,15 +103,20 @@ class ClientViewModel @Inject constructor(
     }
 
     fun sendAnswer(answerId: Int) {
-        _clientState.value = _clientState.value.copy(
-            selectedAnswerId = answerId,
-            isYourTurn = false,
-            ticks = ticks.value
-        )
-
         viewModelScope.launch(Dispatchers.IO) {
             clientManager?.sendSelectedAnswer(answerId)
+            if(_clientState.value.gameParams!=null && _clientState.value.gameParams!!.gameType==GameType.COMBINATION)
+            {
+                //Needed to properly render animations in combination game mode
+                delay(100)
+            }
+            _clientState.value = _clientState.value.copy(
+                selectedAnswerId = answerId,
+                isYourTurn = false,
+                ticks = ticks.value
+            )
         }
+
     }
 
     fun onUserTyping() {

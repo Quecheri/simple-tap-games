@@ -19,7 +19,6 @@ import polsl.game.server.data.Round
 import polsl.game.server.data.WaitingForPlayers
 import polsl.game.server.data.toViewState
 import polsl.game.server.view.PlayersNameDialog
-import polsl.game.server.view.StringQuestionContentView
 import polsl.game.server.view.ResultView
 import polsl.game.server.view.StartGameView
 import polsl.game.server.view.WaitingForClientsView
@@ -136,11 +135,10 @@ fun ServerScreen(
                                         )
                                     }
                                     GameType.COMBINATION ->
-                                        if (serverViewModel.getPromptString()==SHOULD_CLICK) {
+                                        if ((serverViewState.state as Round).prompt.prompt== SHOULD_CLICK) {
                                             BlinkContentView(
                                                 title = stringResource(R.string.combination_active_title),
                                                 modifier = Modifier.fillMaxWidth(),
-                                                ticks = ticks,
                                                 flashColor = Color.Green,
                                                 onScreenClicked = {
                                                     serverViewModel.selectedAnswerServer(1)
@@ -154,11 +152,9 @@ fun ServerScreen(
                                             )
                                         }
                                         else {
-
                                                 BlinkContentView(
                                                     title = stringResource(R.string.combination_preview_title),
                                                     modifier = Modifier.fillMaxWidth(),
-                                                    ticks = ticks,
                                                     clicable = false,
                                                     startWithFlash = true,
                                                     flashColor = Color.Yellow,
@@ -184,7 +180,6 @@ fun ServerScreen(
                                         BlinkContentView(
                                             title = stringResource(R.string.combination_active_title),
                                             modifier = Modifier.fillMaxWidth(),
-                                            ticks = 99999,
                                             flashColor = Color.Red,
                                             onScreenClicked = {
                                                 serverViewModel.selectedAnswerServer(-2)
@@ -198,7 +193,6 @@ fun ServerScreen(
                                         BlinkContentView(
                                             title = stringResource(R.string.combination_preview_title),
                                             modifier = Modifier.fillMaxWidth(),
-                                            ticks = 99999,
                                             clicable = false,
                                             flashColor = Color.Yellow,
                                             onScreenClicked = {},

@@ -107,7 +107,6 @@ fun ClientScreen(
                                                         if (clientViewState.prompt?.prompt==SHOULD_CLICK)
                                                         BlinkContentView(
                                                             modifier = Modifier.fillMaxWidth(),
-                                                            ticks = ticks,
                                                             flashColor = Color.Green,
                                                             onScreenClicked = {
                                                                 clientViewModel.sendAnswer(1)
@@ -118,7 +117,6 @@ fun ClientScreen(
                                                             {
                                                                 BlinkContentView(
                                                                     modifier = Modifier.fillMaxWidth(),
-                                                                    ticks = ticks,
                                                                     clicable = false,
                                                                     flashColor = Color.Yellow,
                                                                     startWithFlash = true,
@@ -136,7 +134,6 @@ fun ClientScreen(
                                                         GameType.COMBINATION->
                                                             BlinkContentView(
                                                                 modifier = Modifier.fillMaxWidth(),
-                                                                ticks = 99999,
                                                                 flashColor =  Color.Red,
                                                                 onScreenClicked = {clientViewModel.sendAnswer(-1)
                                                                     clientViewModel.stopCountDown()},

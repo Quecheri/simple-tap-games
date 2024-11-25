@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -137,7 +138,6 @@ class ServerViewModel @Inject constructor(
         if(strategy!=null)
         {
             viewModelScope.launch {
-                _serverState.value = _serverState.value.copy(state = DownloadingQuestions)
                 prompt = strategy!!.getPrompt()
                 sendParams(gameType)
                 /** Send first Question */
@@ -184,22 +184,30 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    private fun showQuestion(prompt: Prompt, target: Int) {
-        viewModelScope.launch {
-            if (target == -1) {
-                _serverState.value = _serverState.value.copy(
-                    state = Round(prompt),
-                    ticks = Timer.TOTAL_TIME,
-                    selectedAnswerId = null,
-                    correctAnswerId = null,
-                )
-                startCountDown()
-            }
-            else{
-                _serverState.value = _serverState.value.copy(state = WaitingForRound)
-                clients.value[target].sendQuestion(prompt)
-            }
-        }
+    private suspend fun  showQuestion(prompt: Prompt, target: Int) {
+         if (target == -1) {
+             if(getGameType()==GameType.COMBINATION)
+             {
+                 //Needed to properly render animations in combination game mode
+                 delay(100)
+             }
+                 _serverState.value = _serverState.value.copy(
+                     state = Round(prompt),
+                     ticks = Timer.TOTAL_TIME,
+                     selectedAnswerId = null,
+                     correctAnswerId = null,
+                 )
+             startCountDown()
+         }
+         else{
+             clients.value[target].sendQuestion(prompt)
+             if(getGameType()==GameType.COMBINATION)
+             {
+                 //Needed to properly render animations in combination game mode
+                 delay(100);
+             }
+             _serverState.value = _serverState.value.copy(state = WaitingForRound)
+         }
     }
 
     private fun startServer() {

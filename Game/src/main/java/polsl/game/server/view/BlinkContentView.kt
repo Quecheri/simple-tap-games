@@ -1,9 +1,7 @@
 package polsl.game.server.view
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,8 +24,8 @@ fun BlinkContentView(
     title: String = "",
     modifier: Modifier = Modifier,
     clicable: Boolean = true,
-    ticks: Long = 5000,
-    flashTimeout:Long = 300,
+    //Message is delayed by 100s in combination gamemode
+    flashTimeout:Long = 100,
     flashColor: Color = Color.Red,
     startWithFlash: Boolean = false,
     onTimeout: () -> Unit,
@@ -37,22 +35,16 @@ fun BlinkContentView(
     var shouldStart by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
-    TimerEffect(
-        duration = ticks,
-        shouldStart = shouldStart && !startWithFlash,
-        onTimeOut = {
-            shouldStart = false
-            onTimeout()
-        }
-    )
     LaunchedEffect(startWithFlash) {
         if (startWithFlash) {
             coroutineScope.launch {
                 shouldStart = false
                 shouldFlash = true
-                delay(flashTimeout)
+                delay(flashTimeout*3)
                 shouldFlash = false
-                delay(flashTimeout/3)
+            }
+            coroutineScope.launch {
+                delay(flashTimeout*3)
                 onTimeout();
             }
         }
@@ -69,6 +61,8 @@ fun BlinkContentView(
                         shouldFlash = true
                         delay(flashTimeout)
                         shouldFlash = false
+                    }
+                    coroutineScope.launch {
                         onScreenClicked()
                     }
                 }
@@ -99,7 +93,6 @@ private fun BlinkContentView_Preview() {
     NordicTheme {
         BlinkContentView(
             title = stringResource(R.string.combination_preview_title),
-            ticks = 3000,
             flashColor = Color.Yellow,
             startWithFlash = true,
             onTimeout = {},
