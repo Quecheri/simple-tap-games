@@ -33,7 +33,7 @@
     <string name="good">Dobrze</string>
     <string name="ok">Ok</string>
     <string name="bad">Źle</string>
-    <string name="reaction_time">Czas na reakcje (sekundy)</string>
+    <string name="reaction_time">Czas na reakcję (sekundy)</string>
     <string name="round_number">Liczba rund</string>
     <string name="Nim_preview_result">Andrzej przegrał grę</string>
     <string name="combination_preview_timeout">Czas minął</string>
