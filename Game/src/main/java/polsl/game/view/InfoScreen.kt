@@ -1,11 +1,13 @@
 package polsl.game.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -76,6 +78,9 @@ fun InfoScreen(
                         append("Po zakończeniu gry wyświetlane jest podsumowanie czasów reakcji.")
                     }
                 )
+            }
+            item {
+                TwoImagesInRow()
             }
             item {
                 HeaderText(text = "Kombinacje")
@@ -169,6 +174,30 @@ fun StandardText(
         text = text,
         modifier = modifier,
     )
+}
+
+@Composable
+fun TwoImagesInRow() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Image(
+            painter = painterResource(id = polsl.game.R.drawable.beaver),
+            contentDescription = "beaver",
+            modifier = Modifier
+                .size(150.dp)
+        )
+
+        Image(
+            painter = painterResource(id = polsl.game.R.drawable.capybara),
+            contentDescription = "capybara",
+            modifier = Modifier
+                .size(150.dp)
+        )
+    }
 }
 
 @Preview
