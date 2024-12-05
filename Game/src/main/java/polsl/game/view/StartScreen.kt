@@ -34,7 +34,7 @@ fun StartScreen(
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Info",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
