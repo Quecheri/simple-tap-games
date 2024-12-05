@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -65,7 +66,7 @@ fun InfoScreen(
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("kapibary") }
                         append(" lub ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("bobra") }
-                        append(". Celem gracza jest jak najszybsze")
+                        append(". Celem gracza jest jak najszybsze ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("kliknięcie") }
                         append(" w ekran z ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("bobrem") }
@@ -184,19 +185,32 @@ fun TwoImagesInRow() {
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Image(
-            painter = painterResource(id = polsl.game.R.drawable.beaver),
-            contentDescription = "beaver",
-            modifier = Modifier
-                .size(150.dp)
-        )
-
-        Image(
-            painter = painterResource(id = polsl.game.R.drawable.capybara),
-            contentDescription = "capybara",
-            modifier = Modifier
-                .size(150.dp)
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            Image(
+                painter = painterResource(id = polsl.game.R.drawable.beaver),
+                contentDescription = "beaver",
+                modifier = Modifier
+                    .size(150.dp)
+            )
+            Text(
+                text = "Bóbr",
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally)
+        {
+            Image(
+                painter = painterResource(id = polsl.game.R.drawable.capybara),
+                contentDescription = "capybara",
+                modifier = Modifier
+                    .size(150.dp)
+            )
+            Text(
+                text = "Kapibara",
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
     }
 }
 
