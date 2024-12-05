@@ -1,8 +1,13 @@
 package polsl.game.view
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +27,17 @@ fun StartScreen(
     Column {
         NordicAppBar(
             title = { Text(text = stringResource(id = R.string.welcome_message)) },
+            actions = {
+                IconButton(
+                    onClick = { onInfoNavigation() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Info",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         )
 
         Column(
@@ -47,16 +63,6 @@ fun StartScreen(
                     onClick = onClientNavigation
                 ) {
                     Text(text = stringResource(id = R.string.join_game))
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Button(
-                    onClick = onInfoNavigation
-                ) {
-                    Text(text = stringResource(id = R.string.additional_info))
                 }
             }
         }
