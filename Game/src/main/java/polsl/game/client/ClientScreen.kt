@@ -51,7 +51,7 @@ fun ClientScreen(
             RequireLocation {
                 val clientViewModel: ClientViewModel = hiltViewModel()
                 val clientViewState by clientViewModel.clientState.collectAsState()
-
+                if(clientViewModel.getNameGet())playersName=clientViewModel.getName();
                 clientViewState.error?.let { message ->
                     ErrorView(message)
                 } ?: run {
@@ -171,6 +171,7 @@ fun ClientScreen(
                                             if(clientViewState.gameParams==null)
                                             {
                                                 if (clientViewState.openDialog) {
+
                                                     PlayersNameDialog(
                                                         playersName = playersName,
                                                         isDuplicate = clientViewState.playersNameIsDuplicate,
@@ -185,6 +186,7 @@ fun ClientScreen(
                                                         onSendClick = {
                                                             playersName = playersName.trim()
                                                             clientViewModel.sendName(playersName)
+                                                            clientViewModel.setName(playersName)
                                                         }
                                                     )
                                                 } else clientViewState.userJoined?.let { ConnectedView(it.player) }

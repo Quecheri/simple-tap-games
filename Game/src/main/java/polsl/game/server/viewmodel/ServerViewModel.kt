@@ -51,6 +51,8 @@ class ServerViewModel @Inject constructor(
     private var timeout: UInt?=null
     private var rounds: UInt?=null
     private var showMatches: Boolean=false
+    private var name: String = ""
+    private var nameGet: Boolean = true
 
     internal fun getGameType():GameType
     {
@@ -93,6 +95,20 @@ class ServerViewModel @Inject constructor(
     fun getGameScore():Int
     {
         return if(strategy!=null) strategy!!.getScore() else 0
+    }
+    fun getName():String
+    {
+        nameGet=false
+        return if(name!="") name else ""
+    }
+    fun setName(name:String)
+    {
+        nameGet=true
+        this.name=name
+    }
+    fun getNameGet():Boolean
+    {
+        return nameGet;
     }
 
     fun getSeed():Int

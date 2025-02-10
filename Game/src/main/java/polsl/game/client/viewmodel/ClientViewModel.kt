@@ -31,6 +31,8 @@ class ClientViewModel @Inject constructor(
     private val _clientState: MutableStateFlow<ClientViewState> =
         MutableStateFlow(ClientViewState())
     val clientState = _clientState.asStateFlow()
+    private var name: String = ""
+    private var nameGet: Boolean = true
 
     init {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -118,7 +120,20 @@ class ClientViewModel @Inject constructor(
         }
 
     }
-
+    fun getName():String
+    {
+        nameGet=false
+        return if(name!="") name else ""
+    }
+    fun getNameGet():Boolean
+    {
+        return nameGet;
+    }
+    fun setName(name:String)
+    {
+        nameGet=true
+        this.name=name
+    }
     fun onUserTyping() {
         _clientState.value = _clientState.value.copy(isUserTyping = true)
     }
