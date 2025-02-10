@@ -134,8 +134,12 @@ class FastReactionStrategy(promptRepository: PromptRepository,
         val avgFalseTime = if(results.incorrectReactions>0) (results.incorrectReactionTime / results.incorrectReactions).toDouble() else 0.0
         val avgNonFalseTime = if(results.correctReactions>0) (results.correctReactionTime / results.correctReactions).toDouble() else 0.0
 
-        val skipWord = if(results.skips == 1) "skip" else "skips"
-        val skipsStr = if(results.skips > 0) "(including ${results.skips} $skipWord) " else " "
+        val skipWord = when {
+            results.skips == 1 -> "pominięcie"
+            results.skips in 2..4 -> "pominięcia"
+            else -> "pominięć"
+        }
+        val skipsStr = if(results.skips > 0) "(włączając ${results.skips} $skipWord) " else " "
 
 
         return """Niepoprawne reakcje $falseReactions ${skipsStr}z średnim czasem $avgFalseTime ms
