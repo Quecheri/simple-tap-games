@@ -25,7 +25,7 @@ fun BlinkContentView(
     modifier: Modifier = Modifier,
     clicable: Boolean = true,
     //Message is delayed by 100s in combination gamemode
-    flashTimeout:Long = 100,
+    flashTimeout:Long = 300,
     flashColor: Color = Color.Red,
     startWithFlash: Boolean = false,
     onTimeout: () -> Unit,
@@ -40,11 +40,11 @@ fun BlinkContentView(
             coroutineScope.launch {
                 shouldStart = false
                 shouldFlash = true
-                delay(flashTimeout*3)
+                delay(flashTimeout)
                 shouldFlash = false
             }
             coroutineScope.launch {
-                delay(flashTimeout*3)
+                delay(flashTimeout)
                 onTimeout();
             }
         }
@@ -59,7 +59,7 @@ fun BlinkContentView(
                     shouldStart = false
                     coroutineScope.launch {
                         shouldFlash = true
-                        delay(flashTimeout)
+                        delay(flashTimeout/3)
                         shouldFlash = false
                     }
                     coroutineScope.launch {

@@ -117,6 +117,7 @@ fun ClientScreen(
                                                                     modifier = Modifier.fillMaxWidth(),
                                                                     clicable = false,
                                                                     flashColor = Color.Yellow,
+                                                                    flashTimeout = clientViewState.gameParams!!.timeout*1L,
                                                                     startWithFlash = true,
                                                                     onScreenClicked = {},
                                                                     onTimeout = {clientViewModel.sendAnswer(1)},

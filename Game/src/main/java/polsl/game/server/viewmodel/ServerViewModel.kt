@@ -99,6 +99,10 @@ class ServerViewModel @Inject constructor(
     {
         return rounds?.toInt() ?: 0
     }
+    fun getTimeout():Int
+    {
+        return timeout?.toInt() ?: 0
+    }
 
     fun getShowNumOfMatches():Boolean
     {
@@ -113,23 +117,24 @@ class ServerViewModel @Inject constructor(
     fun startGame(gameType: GameType, timeout : String, rounds : String, showMatches: Boolean) {
         stopAdvertising()
 
-        this.timeout = timeout.toUIntOrNull()
-        if(this.timeout!=null)
-            this.timeout = this.timeout!!*1000U
+        this.timeout = parseTimeout(timeout);
         this.rounds = rounds.toUIntOrNull()
         this.showMatches = showMatches
 
         this.gameType = gameType
         when (gameType) {
             GameType.NIM -> {
+                if (this.timeout==null) this.timeout = 2000U
                 Log.d("StartGame", "Rozpoczynam Grę NIM")
                 strategy = NimStrategy(promptRepository, this.rounds)
             }
             GameType.FAST_REACTION -> {
+                if (this.timeout==null) this.timeout = 1000U
                 Log.d("StartGame", "Rozpoczynam Grę Szybkość reakcji")
                 strategy = FastReactionStrategy(promptRepository,this.rounds)
             }
             GameType.COMBINATION -> {
+                if (this.timeout==null) this.timeout = 100U
                 Log.d("StartGame", "Rozpoczynam Grę kombinacje")
                 strategy = CombinationStrategy(promptRepository,this.rounds)
                 rollingPointer = strategy!!.rollPointer(clients.value.size)
@@ -428,6 +433,16 @@ class ServerViewModel @Inject constructor(
 
     private fun mapName(deviceAddress: String): String? {
         return mapNameWithDevice.value.find { it.deviceAddress == deviceAddress }?.name
+    }
+
+    private fun parseTimeout(timeout: String): UInt? {
+        val standardizedTimeout = timeout.replace(',', '.')
+        return try {
+            val number = standardizedTimeout.toDouble()
+            (number * 1000).toUInt()
+        } catch (e: NumberFormatException) {
+            null
+        }
     }
 }
 enum class GameType(val value: Int) {

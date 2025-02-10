@@ -95,8 +95,6 @@ fun StartGameView(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if(!isCombination)
-            {
                 TextField(
                     value = timeForReaction,
                     onValueChange = { timeForReaction = it },
@@ -104,7 +102,6 @@ fun StartGameView(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
-            }
 
 
             Spacer(modifier = Modifier.height(8.dp))

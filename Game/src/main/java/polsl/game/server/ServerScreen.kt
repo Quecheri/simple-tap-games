@@ -55,7 +55,7 @@ fun ServerScreen(
             var isDuplicate by rememberSaveable { mutableStateOf(false) }
             var isEmpty by rememberSaveable { mutableStateOf(false) }
             val isError = isEmpty || isDuplicate
-
+            var blinkTimeout = 100L
             when (val currentState = serverViewState.state) {
                 is WaitingForPlayers ->
                     if (currentState.connectedPlayers == 0) {
@@ -96,7 +96,7 @@ fun ServerScreen(
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
-
+                                blinkTimeout = serverViewModel.getTimeout()*1L;
                                 val ticks by serverViewModel.ticks.collectAsState()
                                 val isTimerRunning = ticks > 0
                                 when(serverViewModel.getGameType())
@@ -155,6 +155,7 @@ fun ServerScreen(
                                                     clicable = false,
                                                     startWithFlash = true,
                                                     flashColor = Color.Yellow,
+                                                    flashTimeout = blinkTimeout,
                                                     onScreenClicked = {},
                                                     onTimeout = { serverViewModel.selectedAnswerServer(1) },
                                                 )
@@ -192,6 +193,7 @@ fun ServerScreen(
                                             modifier = Modifier.fillMaxWidth(),
                                             clicable = false,
                                             flashColor = Color.Yellow,
+                                            flashTimeout = blinkTimeout,
                                             onScreenClicked = {},
                                             onTimeout = {},
                                         )
