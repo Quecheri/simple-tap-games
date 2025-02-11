@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.ble.ktx.stateAsFlow
-import polsl.game.HiltApplication
 import polsl.game.client.data.ClientViewState
 import polsl.game.client.repository.ClientConnection
 import polsl.game.client.repository.ScannerRepository
 import polsl.game.server.viewmodel.GameType
 import polsl.game.server.viewmodel.Timer
 import polsl.game.server.viewmodel.TimerViewModel
+import polsl.game.spec.StorageManager
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,8 +32,9 @@ class ClientViewModel @Inject constructor(
     private val _clientState: MutableStateFlow<ClientViewState> =
         MutableStateFlow(ClientViewState())
     val clientState = _clientState.asStateFlow()
+    private val storageManager = StorageManager(context)
     private var name: String = ""
-    private var nameGet: Boolean = true
+    private var nameLoaded: Boolean = false
 
     init {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -121,42 +122,29 @@ class ClientViewModel @Inject constructor(
         }
 
     }
-    //#TODO repeated code from ServerViewModel
-    private var app=getApplication<HiltApplication>()
-    private val nameKey = "NameKey"
-    private val prefs = app.getSharedPreferences(nameKey, Context.MODE_PRIVATE)
-
     fun getName():String
     {
-        nameGet=false
+        nameLoaded=true
         if(name.isNotEmpty())
             return name;
         else
         {
-            val loaded= loadData(nameKey);
+            val loaded= storageManager.loadData();
             if(loaded!=null)
                 return loaded
         }
         return ""
     }
-
-    private fun saveData(key: String, value: String) {
-        prefs.edit().putString(key, value).apply()
-    }
-
-    private fun loadData(key: String): String? {
-        return prefs.getString(key, null)
-    }
     fun setName(name:String)
     {
-        saveData(nameKey, name)
+        storageManager.saveData(value = name)
 
-        nameGet=true
+        nameLoaded=false
         this.name=name
     }
-    fun getNameGet():Boolean
+    fun isNameLoaded():Boolean
     {
-        return nameGet;
+        return nameLoaded;
     }
 
     fun onUserTyping() {

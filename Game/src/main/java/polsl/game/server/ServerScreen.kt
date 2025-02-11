@@ -62,7 +62,7 @@ fun ServerScreen(
                         WaitingForClientsView()
                     } else {
                         if (openDialog) {
-                            if(serverViewModel.getNameGet())playersName=serverViewModel.getName();
+                            if(!serverViewModel.isNameLoaded())playersName=serverViewModel.getName();
                             PlayersNameDialog(
                                 playersName = playersName,
                                 isDuplicate = isDuplicate,

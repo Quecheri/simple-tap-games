@@ -51,7 +51,7 @@ fun ClientScreen(
             RequireLocation {
                 val clientViewModel: ClientViewModel = hiltViewModel()
                 val clientViewState by clientViewModel.clientState.collectAsState()
-                if(clientViewModel.getNameGet())playersName=clientViewModel.getName();
+                if(!clientViewModel.isNameLoaded())playersName=clientViewModel.getName();
                 clientViewState.error?.let { message ->
                     ErrorView(message)
                 } ?: run {

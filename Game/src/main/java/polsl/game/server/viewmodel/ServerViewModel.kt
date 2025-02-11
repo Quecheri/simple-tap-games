@@ -23,11 +23,11 @@ import polsl.game.server.repository.ServerManager
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.observer.ServerObserver
-import polsl.game.HiltApplication
 import polsl.game.server.model.CombinationStrategy
 import polsl.game.server.model.FastReactionStrategy
 import polsl.game.server.model.GameStrategy
 import polsl.game.server.model.NimStrategy
+import polsl.game.spec.StorageManager
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,6 +42,7 @@ class ServerViewModel @Inject constructor(
     private val _serverState: MutableStateFlow<ServerViewState> =
         MutableStateFlow(ServerViewState())
     val serverViewState = _serverState.asStateFlow()
+    private val storageManager = StorageManager(context)
     private var clients: MutableStateFlow<List<ServerConnection>> = MutableStateFlow(emptyList())
     private lateinit var prompt: Prompt
     private var rollingPointer = -1
@@ -53,7 +54,7 @@ class ServerViewModel @Inject constructor(
     private var rounds: UInt?=null
     private var showMatches: Boolean=false
     private var name: String = ""
-    private var nameGet: Boolean = true
+    private var nameLoaded: Boolean = false
 
     internal fun getGameType():GameType
     {
@@ -98,41 +99,30 @@ class ServerViewModel @Inject constructor(
         return if(strategy!=null) strategy!!.getScore() else 0
     }
 
-    private var app=getApplication<HiltApplication>()
-    private val nameKey = "NameKey"
-    private val prefs = app.getSharedPreferences(nameKey, Context.MODE_PRIVATE)
-
     fun getName():String
     {
-        nameGet=false
+        nameLoaded=true
         if(name.isNotEmpty())
             return name;
         else
         {
-            val loaded= loadData(nameKey);
+            val loaded= storageManager.loadData();
             if(loaded!=null)
                 return loaded
         }
         return ""
     }
 
-    private fun saveData(key: String, value: String) {
-        prefs.edit().putString(key, value).apply()
-    }
 
-    private fun loadData(key: String): String? {
-        return prefs.getString(key, null)
-    }
     fun setName(name:String)
     {
-        saveData(nameKey, name)
-
-        nameGet=true
+        storageManager.saveData(value = name)
+        nameLoaded=false
         this.name=name
     }
-    fun getNameGet():Boolean
+    fun isNameLoaded():Boolean
     {
-        return nameGet;
+        return nameLoaded;
     }
 
     fun getSeed():Int
