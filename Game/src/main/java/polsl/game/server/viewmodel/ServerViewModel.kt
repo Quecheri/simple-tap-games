@@ -23,6 +23,7 @@ import polsl.game.server.repository.ServerManager
 import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.ble.ktx.stateAsFlow
 import no.nordicsemi.android.ble.observer.ServerObserver
+import polsl.game.HiltApplication
 import polsl.game.server.model.CombinationStrategy
 import polsl.game.server.model.FastReactionStrategy
 import polsl.game.server.model.GameStrategy
@@ -96,13 +97,36 @@ class ServerViewModel @Inject constructor(
     {
         return if(strategy!=null) strategy!!.getScore() else 0
     }
+
+    private var app=getApplication<HiltApplication>()
+    private val nameKey = "NameKey"
+    private val prefs = app.getSharedPreferences(nameKey, Context.MODE_PRIVATE)
+
     fun getName():String
     {
         nameGet=false
-        return if(name!="") name else ""
+        if(name.isNotEmpty())
+            return name;
+        else
+        {
+            val loaded= loadData(nameKey);
+            if(loaded!=null)
+                return loaded
+        }
+        return ""
+    }
+
+    private fun saveData(key: String, value: String) {
+        prefs.edit().putString(key, value).apply()
+    }
+
+    private fun loadData(key: String): String? {
+        return prefs.getString(key, null)
     }
     fun setName(name:String)
     {
+        saveData(nameKey, name)
+
         nameGet=true
         this.name=name
     }

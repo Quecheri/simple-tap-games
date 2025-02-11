@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.ble.ktx.stateAsFlow
+import polsl.game.HiltApplication
 import polsl.game.client.data.ClientViewState
 import polsl.game.client.repository.ClientConnection
 import polsl.game.client.repository.ScannerRepository
@@ -120,20 +121,44 @@ class ClientViewModel @Inject constructor(
         }
 
     }
+    //#TODO repeated code from ServerViewModel
+    private var app=getApplication<HiltApplication>()
+    private val nameKey = "NameKey"
+    private val prefs = app.getSharedPreferences(nameKey, Context.MODE_PRIVATE)
+
     fun getName():String
     {
         nameGet=false
-        return if(name!="") name else ""
+        if(name.isNotEmpty())
+            return name;
+        else
+        {
+            val loaded= loadData(nameKey);
+            if(loaded!=null)
+                return loaded
+        }
+        return ""
+    }
+
+    private fun saveData(key: String, value: String) {
+        prefs.edit().putString(key, value).apply()
+    }
+
+    private fun loadData(key: String): String? {
+        return prefs.getString(key, null)
+    }
+    fun setName(name:String)
+    {
+        saveData(nameKey, name)
+
+        nameGet=true
+        this.name=name
     }
     fun getNameGet():Boolean
     {
         return nameGet;
     }
-    fun setName(name:String)
-    {
-        nameGet=true
-        this.name=name
-    }
+
     fun onUserTyping() {
         _clientState.value = _clientState.value.copy(isUserTyping = true)
     }
