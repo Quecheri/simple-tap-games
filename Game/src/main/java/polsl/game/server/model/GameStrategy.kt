@@ -217,14 +217,23 @@ class CombinationStrategy(promptRepository: PromptRepository,
         currentCombinationLength++
         setup=true
         responseQueue.clear()
-        if(currentCombinationLength==1)
-        {
-            combination.add(-1)
+
+//      Every round randomize whole list
+        combination.clear();
+        combination.add(-1)
+        for (i in 1 until currentCombinationLength) {
+            combination.add(getRandomDistinctPtr(combination.lastOrNull() ?: -1, maxIndex))
         }
-        else
-        {
-            combination.add(getRandomDistinctPtr(combination.last(), maxIndex))
-        }
+
+//        Every round add another element to existing list
+//        if(currentCombinationLength==1)
+//        {
+//            combination.add(-1)
+//        }
+//        else
+//        {
+//            combination.add(getRandomDistinctPtr(combination.last(), maxIndex))
+//        }
 
         responseQueue.addAll(combination)
         responseQueue.addAll(combination)
