@@ -23,9 +23,12 @@ import polsl.game.server.viewmodel.ServerViewModel
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.ui.view.NordicAppBar
 import polsl.game.server.repository.SHOULD_CLICK
+import polsl.game.server.repository.SHOULD_NOT_CLICK
+import polsl.game.server.repository.CONTROL_COMMUNICATION_FIRST
 import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageContentView
 import polsl.game.server.view.NimContentView
+import polsl.game.server.view.StartRoundView
 import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +65,7 @@ fun ServerScreen(
                         WaitingForClientsView()
                     } else {
                         if (openDialog) {
-                            if(!serverViewModel.isNameLoaded())playersName=serverViewModel.getName();
+                            if(!serverViewModel.isNameLoaded())playersName=serverViewModel.getName()
                             PlayersNameDialog(
                                 playersName = playersName,
                                 isDuplicate = isDuplicate,
@@ -98,7 +101,7 @@ fun ServerScreen(
                     when (serverViewState.isGameOver) {
                         true -> ResultView(result = serverViewModel.getResultString())
                         else -> {
-                                blinkTimeout = serverViewModel.getTimeout()*1L;
+                                blinkTimeout = serverViewModel.getTimeout()*1L
                                 val ticks by serverViewModel.ticks.collectAsState()
                                 val isTimerRunning = ticks > 0
                                 when(serverViewModel.getGameType())
@@ -134,7 +137,18 @@ fun ServerScreen(
                                         )
                                     }
                                     GameType.COMBINATION ->
-                                        if ((serverViewState.state as Round).prompt.prompt== SHOULD_CLICK) {
+                                        if (serverViewModel.getPromptString() == CONTROL_COMMUNICATION_FIRST)
+                                        {
+                                            StartRoundView(
+                                                title = stringResource(R.string.start_round_title),
+                                                modifier = Modifier.fillMaxWidth(),
+                                                onScreenClicked = {
+                                                    serverViewModel.selectedAnswerServer(0)
+                                                    serverViewModel.stopCountDown()
+                                                },
+                                            )
+                                        }
+                                        else if (serverViewModel.getPromptString()== SHOULD_CLICK) {
                                             BlinkContentView(
                                                 title = stringResource(R.string.combination_active_title),
                                                 modifier = Modifier.fillMaxWidth(),
@@ -150,7 +164,7 @@ fun ServerScreen(
                                                 },
                                             )
                                         }
-                                        else {
+                                        else if (serverViewModel.getPromptString() == SHOULD_NOT_CLICK){
                                                 BlinkContentView(
                                                     title = stringResource(R.string.combination_preview_title),
                                                     modifier = Modifier.fillMaxWidth(),
@@ -175,7 +189,19 @@ fun ServerScreen(
                             when(serverViewModel.getGameType())
                             {
                                 GameType.COMBINATION ->
-                                    if (serverViewModel.getPromptString() == SHOULD_CLICK)
+                                    if(serverViewModel.isCombinationPreview())
+                                    {
+                                        BlinkContentView(
+                                            title = stringResource(R.string.combination_preview_title),
+                                            modifier = Modifier.fillMaxWidth(),
+                                            clicable = false,
+                                            flashColor = Color.Yellow,
+                                            flashTimeout = blinkTimeout,
+                                            onScreenClicked = {},
+                                            onTimeout = {},
+                                        )
+                                    }
+                                    else if (serverViewModel.getPromptString() == SHOULD_CLICK)
                                     {
                                         BlinkContentView(
                                             title = stringResource(R.string.combination_active_title),
@@ -188,18 +214,18 @@ fun ServerScreen(
                                             onTimeout = {},
                                         )
                                     }
-                                else{
+                                    else if (serverViewModel.getPromptString() == SHOULD_NOT_CLICK){
 
-                                        BlinkContentView(
-                                            title = stringResource(R.string.combination_preview_title),
-                                            modifier = Modifier.fillMaxWidth(),
-                                            clicable = false,
-                                            flashColor = Color.Yellow,
-                                            flashTimeout = blinkTimeout,
-                                            onScreenClicked = {},
-                                            onTimeout = {},
-                                        )
-                                }
+                                            BlinkContentView(
+                                                title = stringResource(R.string.combination_preview_title),
+                                                modifier = Modifier.fillMaxWidth(),
+                                                clicable = false,
+                                                flashColor = Color.Yellow,
+                                                flashTimeout = blinkTimeout,
+                                                onScreenClicked = {},
+                                                onTimeout = {},
+                                            )
+                                    }
 
                                 GameType.NIM ->
                                 {

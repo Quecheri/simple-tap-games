@@ -32,6 +32,7 @@ data class ClientViewState(
     val userJoined: Players? = null,
     val isGameOver: Boolean? = null,
     val isYourTurn: Boolean = false,
+    val isPreview: Boolean = false,
     val result: Results? = null,
     val nameResult: NameResult? = null,
     val error: String? = null,

@@ -26,6 +26,7 @@
     <string name="score">Wynik</string>
     <string name="combination_active_title">Odtwórz kombinację</string>
     <string name="combination_preview_title">Zapamiętaj kombinację</string>
+    <string name="start_round_title">Kliknij by rozpocząć rundę</string>
     <string name="wait_title">Poczekaj na swój ruch</string>
     <string name="error_while_receving_result">Wystąpił błąd podczas wczytywania wyników</string>
     <string name="how_are_you">Jak się masz?</string>

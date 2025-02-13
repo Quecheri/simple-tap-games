@@ -13,7 +13,7 @@ fun Answer.toViewState(
         id,
         text,
         isSelected = id == selectedAnswerId,
-        enableSelection = isTimerRunning && selectedAnswerId == null,
+        enableSelection = isTimerRunning,
         color = when {
             id == correctAnswerId -> ColorState.CORRECT
             id == selectedAnswerId && isTimerRunning -> ColorState.SELECTED_AND_TIMER_RUNNING

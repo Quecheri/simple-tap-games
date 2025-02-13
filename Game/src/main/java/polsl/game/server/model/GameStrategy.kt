@@ -1,10 +1,13 @@
 package polsl.game.server.model
 
+import android.util.Log
+import polsl.game.server.repository.CONTROL_COMMUNICATION_FIRST
+import polsl.game.server.repository.CONTROL_COMMUNICATION_SECOND
+import polsl.game.server.repository.CONTROL_COMMUNICATION_THIRD
 import polsl.game.server.repository.Prompt
 import polsl.game.server.repository.PromptRepository
 import polsl.game.server.repository.SHOULD_CLICK
 
-//TODO ekran z instrukcją i licencją
 //TODO ***usunięcie listy pytań z prompta
 
 abstract class GameStrategy(protected val promptRepository: PromptRepository, protected val uintParam: UInt?)
@@ -161,6 +164,7 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private var currentCombinationLength: Int = 0
     private var combinationFailed = false
     private var setup = true
+    private var controllMessageCounter = 2
     private var gameFinished = false
     private var responseQueue: MutableList<Int> = mutableListOf()
     private var combination: MutableList<Int> = mutableListOf()
@@ -171,7 +175,11 @@ class CombinationStrategy(promptRepository: PromptRepository,
 
     override fun getPrompt(): Prompt
     {
-        return promptRepository.getCombinationPrompt(setup)
+        val prompt = promptRepository.getCombinationPrompt(setup, controllMessageCounter)
+        if(prompt.prompt== CONTROL_COMMUNICATION_FIRST ||
+            prompt.prompt==CONTROL_COMMUNICATION_SECOND ||
+            prompt.prompt==CONTROL_COMMUNICATION_THIRD )controllMessageCounter--
+        return prompt
     }
     fun getSetup():Boolean
     {
@@ -202,13 +210,15 @@ class CombinationStrategy(promptRepository: PromptRepository,
             initializeCombinationList(param)
             rollingPointer=0
         }
+        if(controllMessageCounter>0 && setup)return responseQueue[rollingPointer]
         else if(currentCombinationLength == maxCombinationLength && rollingPointer==responseQueue.count()-1)
         {
             gameFinished = true
         }
-        else if(rollingPointer==responseQueue.count()/2)
+        else if(rollingPointer==responseQueue.count()/2 && setup)
         {
             setup=false
+            return responseQueue[rollingPointer]
         }
         return responseQueue[rollingPointer++]
     }
@@ -216,6 +226,7 @@ class CombinationStrategy(promptRepository: PromptRepository,
     private fun initializeCombinationList(maxIndex: Int) {
         currentCombinationLength++
         setup=true
+        controllMessageCounter = 2
         responseQueue.clear()
 
 //      Every round randomize whole list

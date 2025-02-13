@@ -27,6 +27,9 @@ import polsl.game.server.model.CombinationStrategy
 import polsl.game.server.model.FastReactionStrategy
 import polsl.game.server.model.GameStrategy
 import polsl.game.server.model.NimStrategy
+import polsl.game.server.repository.CONTROL_COMMUNICATION_FIRST
+import polsl.game.server.repository.CONTROL_COMMUNICATION_SECOND
+import polsl.game.server.repository.CONTROL_COMMUNICATION_THIRD
 import polsl.game.spec.StorageManager
 import javax.inject.Inject
 
@@ -55,6 +58,7 @@ class ServerViewModel @Inject constructor(
     private var showMatches: Boolean=false
     private var name: String = ""
     private var nameLoaded: Boolean = false
+    private var Preview: Boolean = false
 
     internal fun getGameType():GameType
     {
@@ -83,7 +87,7 @@ class ServerViewModel @Inject constructor(
     }
     fun isCombinationPreview():Boolean
     {
-        return getGameType()==GameType.COMBINATION && (strategy!! as CombinationStrategy).getSetup()
+        return getGameType()==GameType.COMBINATION && Preview
     }
     fun getGameStateString():String
     {
@@ -176,7 +180,10 @@ class ServerViewModel @Inject constructor(
                 prompt = strategy!!.getPrompt()
                 sendParams(gameType)
                 /** Send first Prompt */
-                showPrompt(prompt,rollingPointer)
+                if(prompt.prompt == CONTROL_COMMUNICATION_FIRST){
+                    showPromptAll(prompt, clients.value.size)}
+                else
+                    showPrompt(prompt,rollingPointer)
             }
         }
         else
@@ -198,13 +205,40 @@ class ServerViewModel @Inject constructor(
         }
     }
 
-    fun showNestPrompt() {
+    private suspend fun showPromptAll(prompt: Prompt, clientsCount: Int) {
+
+        if (prompt.prompt== CONTROL_COMMUNICATION_FIRST)
+        {
+            _serverState.value = _serverState.value.copy(
+                state = Round(prompt),
+                ticks = Timer.TOTAL_TIME,
+                selectedAnswerId = null,
+                correctAnswerId = null,
+            )
+        }
+        for (i in 0 until clientsCount)
+            clients.value[i].sendPrompt(prompt)
+        if (prompt.prompt== CONTROL_COMMUNICATION_SECOND)
+        {
+            Preview=true
+            selectedAnswerServer(0)
+        }
+        if (prompt.prompt== CONTROL_COMMUNICATION_THIRD)
+        {
+            Preview=false
+            selectedAnswerServer(0)
+        }
+    }
+    fun showNextPrompt() {
         viewModelScope.launch {
            if (!strategy!!.isGameOver())
            {
                rollingPointer = strategy!!.rollPointer(clients.value.size)
                prompt = strategy!!.getPrompt()
-               showPrompt(prompt, rollingPointer)
+               if(prompt.prompt == CONTROL_COMMUNICATION_FIRST||prompt.prompt == CONTROL_COMMUNICATION_SECOND||prompt.prompt == CONTROL_COMMUNICATION_THIRD){
+                   showPromptAll(prompt, clients.value.size)}
+               else {
+                   showPrompt(prompt, rollingPointer)}
            }else
            {
                _serverState.value = _serverState.value.copy(isGameOver = true)
@@ -301,7 +335,7 @@ class ServerViewModel @Inject constructor(
                     .apply {
                         clientAnswer
                             .onEach { saveScore(it, device.address)
-                                showNestPrompt()}
+                                showNextPrompt()}
                             .launchIn(viewModelScope)
                     }
                     .apply {
@@ -432,7 +466,7 @@ class ServerViewModel @Inject constructor(
         viewModelScope.launch {
             _serverState.value = _serverState.value.copy(selectedAnswerId = selectedAnswer)
             advertiser.address?.let { saveScore(selectedAnswer, it) }
-            showNestPrompt()
+            showNextPrompt()
         }
 
     }

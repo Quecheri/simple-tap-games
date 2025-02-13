@@ -27,6 +27,6 @@ fun Prompt.toProto() = PromptProto(prompt, answers.map { it.toProto() })
 
 fun Answer.toProto() = AnswerProto(text, id)
 
-fun PromptProto.toPrompt() = Prompt(text, answers.map { it.toAnswer() })
+fun PromptProto.toPrompt() = Prompt(text, answers.map { it.toAnswer() },correctAnswerId)
 
 fun AnswerProto.toAnswer() = Answer(text, id)

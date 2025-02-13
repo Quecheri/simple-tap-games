@@ -31,11 +31,13 @@ message RequestProto {
   int32 scoreValue        = 12;
   string resultStr        = 13;
   GameParamsProto gameParams = 14;
+  int32 correctAnswerId = 15;
 }
 
 message PromptProto {
   string text                  = 1;
   repeated AnswerProto answers = 2;
+  int32 correctAnswerId = 3;
 }
 
 message AnswerProto {

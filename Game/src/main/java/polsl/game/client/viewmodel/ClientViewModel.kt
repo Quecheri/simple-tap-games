@@ -17,6 +17,9 @@ import no.nordicsemi.android.ble.ktx.stateAsFlow
 import polsl.game.client.data.ClientViewState
 import polsl.game.client.repository.ClientConnection
 import polsl.game.client.repository.ScannerRepository
+import polsl.game.server.repository.CONTROL_COMMUNICATION_FIRST
+import polsl.game.server.repository.CONTROL_COMMUNICATION_SECOND
+import polsl.game.server.repository.CONTROL_COMMUNICATION_THIRD
 import polsl.game.server.viewmodel.GameType
 import polsl.game.server.viewmodel.Timer
 import polsl.game.server.viewmodel.TimerViewModel
@@ -35,6 +38,7 @@ class ClientViewModel @Inject constructor(
     private val storageManager = StorageManager(context)
     private var name: String = ""
     private var nameLoaded: Boolean = false
+    private var preview: Boolean = false
 
     init {
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -57,12 +61,15 @@ class ClientViewModel @Inject constructor(
                         .launchIn(viewModelScope)
                     prompt
                         .onEach {
+                            if(it.prompt== CONTROL_COMMUNICATION_SECOND) preview=true
+                            else if(it.prompt==CONTROL_COMMUNICATION_THIRD) preview=false
                             _clientState.value = _clientState.value.copy(
-                                selectedAnswerId = null,
+                                selectedAnswerId = it.correctAnswerId,
                                 correctAnswerId = null,
+                                isPreview = preview,
                                 ticks = Timer.TOTAL_TIME,
                                 prompt = it,
-                                isYourTurn=true,
+                                isYourTurn = isYourTurn(1),
                             )
                             startCountDown()
                         }
@@ -71,7 +78,7 @@ class ClientViewModel @Inject constructor(
                         .onEach {
                             _clientState.value = _clientState.value.copy(
                                 correctAnswerId = it,
-                                isYourTurn = false,
+                                isYourTurn = isYourTurn(0),
                                 ticks = ticks.value
                             )
                         }
@@ -100,6 +107,20 @@ class ClientViewModel @Inject constructor(
         }
     }
 
+
+    fun isCombinationPreview():Boolean
+    {
+        return _clientState.value.gameParams!=null && _clientState.value.gameParams!!.gameType==GameType.COMBINATION && preview
+    }
+    private fun isYourTurn(source:Int): Boolean {
+        return when (source){
+            0 ->_clientState.value.prompt?.prompt== CONTROL_COMMUNICATION_FIRST//Answer
+            1 ->true //Prompt
+            else -> false
+
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         clientManager?.release()
@@ -108,15 +129,15 @@ class ClientViewModel @Inject constructor(
 
     fun sendAnswer(answerId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            clientManager?.sendSelectedAnswer(answerId)
             if(_clientState.value.gameParams!=null && _clientState.value.gameParams!!.gameType==GameType.COMBINATION)
             {
                 //Needed to properly render animations in combination game mode
                 delay(100)
             }
+            clientManager?.sendSelectedAnswer(answerId)
             _clientState.value = _clientState.value.copy(
                 selectedAnswerId = answerId,
-                isYourTurn = false,
+                isYourTurn = isYourTurn(0),
                 ticks = ticks.value
             )
         }

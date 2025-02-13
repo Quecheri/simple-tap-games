@@ -22,10 +22,13 @@ import no.nordicsemi.android.ble.ktx.state.ConnectionState
 import no.nordicsemi.android.common.permissions.ble.RequireBluetooth
 import no.nordicsemi.android.common.permissions.ble.RequireLocation
 import no.nordicsemi.android.common.ui.view.NordicAppBar
+import polsl.game.server.repository.CONTROL_COMMUNICATION_FIRST
 import polsl.game.server.repository.SHOULD_CLICK
+import polsl.game.server.repository.SHOULD_NOT_CLICK
 import polsl.game.server.view.BlinkContentView
 import polsl.game.server.view.ImageContentView
 import polsl.game.server.view.NimContentView
+import polsl.game.server.view.StartRoundView
 import polsl.game.server.viewmodel.GameType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,9 +114,10 @@ fun ClientScreen(
                                                                 clientViewModel.stopCountDown()},
                                                             onTimeout = {if(clientViewModel.timerRunning) clientViewModel.sendAnswer(-1)},
                                                         )
-                                                        else
+                                                        else if (clientViewState.prompt?.prompt== SHOULD_NOT_CLICK)
                                                             {
                                                                 BlinkContentView(
+                                                                    title = stringResource(R.string.combination_preview_title),
                                                                     modifier = Modifier.fillMaxWidth(),
                                                                     clicable = false,
                                                                     flashColor = Color.Yellow,
@@ -123,6 +127,17 @@ fun ClientScreen(
                                                                     onTimeout = {clientViewModel.sendAnswer(1)},
                                                                 )
                                                             }
+                                                        else if (clientViewState.prompt?.prompt == CONTROL_COMMUNICATION_FIRST)
+                                                        {
+                                                            StartRoundView(
+                                                                title = stringResource(R.string.start_round_title),
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                onScreenClicked = {
+                                                                    clientViewModel.sendAnswer(0)
+                                                                    clientViewModel.stopCountDown()
+                                                                },
+                                                            )
+                                                        }
                                                 }
                                             }
                                             else
@@ -131,6 +146,19 @@ fun ClientScreen(
                                                     when(clientViewState.gameParams!!.gameType)
                                                     {
                                                         GameType.COMBINATION->
+                                                        if (clientViewModel.isCombinationPreview())
+                                                        {
+                                                            BlinkContentView(
+                                                                title = stringResource(R.string.combination_preview_title),
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                clicable = false,
+                                                                flashColor = Color.Yellow,
+                                                                flashTimeout = clientViewState.gameParams!!.timeout*1L,
+                                                                onScreenClicked = {},
+                                                                onTimeout = {},
+                                                            )
+                                                        }
+                                                        else
                                                             BlinkContentView(
                                                                 modifier = Modifier.fillMaxWidth(),
                                                                 flashColor =  Color.Red,

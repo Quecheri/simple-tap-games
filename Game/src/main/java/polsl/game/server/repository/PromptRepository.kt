@@ -37,12 +37,20 @@ class PromptRepository @Inject constructor(
     fun getFastReactionPrompt(): Prompt {
         return frPrompt[frIdx++]
     }
-    fun getCombinationPrompt(setup:Boolean): Prompt {
-        return if(setup) Prompt(SHOULD_NOT_CLICK, emptyList(),null)
-        else Prompt(SHOULD_CLICK, emptyList(),null)
+    fun getCombinationPrompt(setup: Boolean, controlMessageCounter:Int): Prompt {
+        return when {
+            controlMessageCounter == 2 -> Prompt(CONTROL_COMMUNICATION_FIRST, emptyList(), null)
+            controlMessageCounter == 1 -> Prompt(CONTROL_COMMUNICATION_SECOND, emptyList(), null)
+            controlMessageCounter == 0 && !setup-> Prompt(CONTROL_COMMUNICATION_THIRD, emptyList(), null)
+            setup -> Prompt(SHOULD_NOT_CLICK, emptyList(), null)
+            else -> Prompt(SHOULD_CLICK, emptyList(), null)
+        }
     }
 
 }
 
 internal const val SHOULD_CLICK = "s"
+internal const val CONTROL_COMMUNICATION_FIRST = "cf"
+internal const val CONTROL_COMMUNICATION_SECOND = "cs"
+internal const val CONTROL_COMMUNICATION_THIRD = "ct"
 internal const val SHOULD_NOT_CLICK = "n"
