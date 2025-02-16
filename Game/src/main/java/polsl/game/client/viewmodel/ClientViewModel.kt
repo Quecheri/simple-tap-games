@@ -61,6 +61,7 @@ class ClientViewModel @Inject constructor(
                         .launchIn(viewModelScope)
                     prompt
                         .onEach {
+                            Log.d("Prompt", it.prompt)
                             if(it.prompt== CONTROL_COMMUNICATION_SECOND) preview=true
                             else if(it.prompt==CONTROL_COMMUNICATION_THIRD) preview=false
                             _clientState.value = _clientState.value.copy(

@@ -128,6 +128,7 @@ class ServerConnection(
      * packets using packet splitter [PacketSplitter.chunk] before sending it to the client.
      */
     suspend fun sendPrompt(prompt: Prompt) {
+        Log.d("Prompt", prompt.prompt)
         val request = RequestProto(OpCodeProto.NEW_PROMPT, prompt = prompt.toProto())
         val requestByteArray = request.encode()
         sendNotification(serverCharacteristic, requestByteArray)
