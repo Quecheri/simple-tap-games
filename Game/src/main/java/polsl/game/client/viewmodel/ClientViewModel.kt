@@ -69,7 +69,7 @@ class ClientViewModel @Inject constructor(
                                 isPreview = preview,
                                 ticks = Timer.TOTAL_TIME,
                                 prompt = it,
-                                isYourTurn = isYourTurn(1),
+                                isYourTurn = isYourTurn(1,it.prompt),
                             )
                             startCountDown()
                         }
@@ -78,7 +78,7 @@ class ClientViewModel @Inject constructor(
                         .onEach {
                             _clientState.value = _clientState.value.copy(
                                 correctAnswerId = it,
-                                isYourTurn = isYourTurn(0),
+                                isYourTurn = isYourTurn(0, _clientState.value.prompt?.prompt),
                                 ticks = ticks.value
                             )
                         }
@@ -112,10 +112,21 @@ class ClientViewModel @Inject constructor(
     {
         return _clientState.value.gameParams!=null && _clientState.value.gameParams!!.gameType==GameType.COMBINATION && preview
     }
-    private fun isYourTurn(source:Int): Boolean {
+    private fun isYourTurn(source:Int, prompt:String?): Boolean {
+
         return when (source){
-            0 ->_clientState.value.prompt?.prompt== CONTROL_COMMUNICATION_FIRST//Answer
-            1 ->true //Prompt
+            0 ->prompt== CONTROL_COMMUNICATION_FIRST//Answer
+            1 ->{
+                if (prompt== CONTROL_COMMUNICATION_SECOND || prompt== CONTROL_COMMUNICATION_THIRD)
+                {
+                    return false
+                }
+                else//Prompt
+                {
+                    true
+                }
+            }
+
             else -> false
 
         }
@@ -137,7 +148,7 @@ class ClientViewModel @Inject constructor(
             clientManager?.sendSelectedAnswer(answerId)
             _clientState.value = _clientState.value.copy(
                 selectedAnswerId = answerId,
-                isYourTurn = isYourTurn(0),
+                isYourTurn = isYourTurn(0,_clientState.value.prompt?.prompt),
                 ticks = ticks.value
             )
         }

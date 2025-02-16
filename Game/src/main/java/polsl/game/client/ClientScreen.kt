@@ -138,6 +138,15 @@ fun ClientScreen(
                                                                 },
                                                             )
                                                         }
+                                                        else
+                                                        {
+                                                            StartRoundView(//To debug purposes
+                                                                title = "State Error",
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                onScreenClicked = {
+                                                                },
+                                                            )
+                                                        }
                                                 }
                                             }
                                             else
@@ -146,7 +155,7 @@ fun ClientScreen(
                                                     when(clientViewState.gameParams!!.gameType)
                                                     {
                                                         GameType.COMBINATION->
-                                                        if (clientViewModel.isCombinationPreview())
+                                                        if (clientViewModel.isCombinationPreview() || clientViewState.isPreview)
                                                         {
                                                             BlinkContentView(
                                                                 title = stringResource(R.string.combination_preview_title),
@@ -156,6 +165,17 @@ fun ClientScreen(
                                                                 flashTimeout = clientViewState.gameParams!!.timeout*1L,
                                                                 onScreenClicked = {},
                                                                 onTimeout = {},
+                                                            )
+                                                        }
+                                                        else if (clientViewState.prompt?.prompt == CONTROL_COMMUNICATION_FIRST)
+                                                        {
+                                                            StartRoundView(
+                                                                title = stringResource(R.string.start_round_title),
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                onScreenClicked = {
+                                                                    clientViewModel.sendAnswer(0)
+                                                                    clientViewModel.stopCountDown()
+                                                                },
                                                             )
                                                         }
                                                         else

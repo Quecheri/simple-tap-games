@@ -217,7 +217,9 @@ class ServerViewModel @Inject constructor(
             )
         }
         for (i in 0 until clientsCount)
+        {
             clients.value[i].sendPrompt(prompt)
+        }
         if (prompt.prompt== CONTROL_COMMUNICATION_SECOND)
         {
             Preview=true
